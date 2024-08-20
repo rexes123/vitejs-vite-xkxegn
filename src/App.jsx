@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import Dashboard  from './pages/Dashboard';
 
-function App() {
-  const [count, setCount] = useState(0);
+export default function App() {
 
   return (
     <div>
-      <p>sdsfsdsdasdsdf</p>
+    <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<Dashboard/>}/>
+    </Routes>
+    </BrowserRouter>
     </div>
   );
 }
-
-export default App;
