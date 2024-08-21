@@ -18,6 +18,7 @@ export default function Dashboard() {
                     <div class="card col-sm-5">
                         <div class="pending">
                             <p>Pending Tasks</p>
+                            <hr/>
                             <div class="pending-row">
                                 <i class="bi bi-clock"></i>
                                 <div class="pending-info">
@@ -61,6 +62,7 @@ export default function Dashboard() {
                     </div>
                     <div class="card col-sm-7">
                         <p>Recent Expense</p>
+                        <hr/>
                         <table class="table">
                             <thead>
                                 <tr>
