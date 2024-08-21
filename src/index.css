@@ -65,4 +65,35 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-} */
+}  */
+
+/* 
+.pending-row{
+  display: flex
+}
+
+
+.pending-info{
+  display: flex;
+  justify-content: space-between; 
+  width: 100%;
+}
+ */
+
+
+.pending-row {
+  display: flex
+}
+
+
+.pending-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.card.col-sm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

@@ -1,5 +1,8 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Dashboard  from './pages/Dashboard';
+import Expense from './pages/Expense';
+import Trip from './pages/Trip';
+import NewExpense from './pages/NewExpense';
 
 export default function App() {
 
@@ -8,6 +11,10 @@ export default function App() {
     <BrowserRouter>
     <Routes>
       <Route path='/' element={<Dashboard/>}/>
+      <Route path='/newExpense' element={<NewExpense/>}/>
+      <Route path='/expense' element={<Expense/>}/>
+      <Route path='/trips' element={<Trip/>}/>
+
     </Routes>
     </BrowserRouter>
     </div>

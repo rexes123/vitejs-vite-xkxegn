@@ -1,21 +1,34 @@
+import { useState } from "react"
+import Dashboard from "../pages/Dashboard"
+import Expense from "../pages/Expense"
+import { NavLink } from "react-router-dom";
+
 export default function Nav(){
+
+    const [activeTab, setActiveTab] = useState('');
+    console.log(activeTab);
+
+    const renderContent = ()=>{
+      if(activeTab === 'home'){
+        return <Dashboard/>
+      } else if (activeTab === 'expenses'){
+        return <Expense/>
+      }   
+    }
+
+
   return (
-    <ul class="nav flex-column">
-    <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">Home</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Expenses</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Trips</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Approvals</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Support</a>
-    </li>
-</ul>
+<div class="d-flex align-items-start">
+  <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+    <NavLink to="/" className={`nav-link ${activeTab ==='home' ? 'active' : ''}`} onClick={()=>setActiveTab('home')} role="tab">Home</NavLink>
+    <NavLink to="/expense" className={`nav-link ${activeTab ==='expenses' ? 'active' : ''}`} onClick={()=>setActiveTab('expenses')} role="tab">Expenses</NavLink>
+    <NavLink to="/trips" className={`nav-link ${activeTab ==='home' ? 'active' : ''}`} role="tab">Trip</NavLink>
+    <button class="nav-link" role="tab">Approvals</button>
+    <button class="nav-link" role="tab">Settings</button>
+  </div>
+  <div class="tab-content" id="v-pills-tabContent">
+    {renderContent}
+  </div>
+</div>
   )
 }
