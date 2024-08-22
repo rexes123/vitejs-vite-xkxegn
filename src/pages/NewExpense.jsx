@@ -42,7 +42,10 @@ export default function NewExpense() {
 
     const handleSubmit = () =>{
         setArray([...array, obj])
+        //Try just send obj to backend
     }
+    
+
     return (
         <div style={{ display: "flex" }} className="container">
             <Nav />
