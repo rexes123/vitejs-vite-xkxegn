@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,14 +13,21 @@ export default function Login() {
     console.log(password);
 
     const user = localStorage.getItem('user');
+    const auth = getAuth();
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (user) {
-        navigate('/');
-        }
-    }, [user, navigate])
+        // Listener for authentication state changes
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                navigate('/');
+            }
+        });
+
+        // Clean up the subscription on component unmount
+        return () => unsubscribe();
+    }, [auth, navigate]);
 
     const handleEmail = (e) => {
         setEmail(e.target.value);
@@ -30,7 +37,6 @@ export default function Login() {
         setPassword(e.target.value);
     }
 
-    const auth = getAuth();
 
     const handleLogin = async (e) => {
         console.log('Login')
