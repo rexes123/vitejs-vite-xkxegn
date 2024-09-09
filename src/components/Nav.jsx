@@ -18,6 +18,10 @@ export default function Nav() {
     }
   }
 
+  const removeUser = () =>{
+    localStorage.removeItem("user")
+  }
+
 
   return (
     <div class="d-flex align-items-start">
@@ -30,6 +34,7 @@ export default function Nav() {
         <NavLink to="/trips" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab">Trip</NavLink>
         <button class="nav-link" role="tab">Approvals</button>
         <button class="nav-link" role="tab">Settings</button>
+        <button onClick={removeUser}>Log out</button>
       </div>
       <div class="tab-content" id="v-pills-tabContent">
         {renderContent}
