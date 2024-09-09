@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import { Image, Col } from 'react-bootstrap';
 import { AuthContext } from "./AuthProvider";
 import { Timestamp, doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -49,38 +49,43 @@ export default function Nav() {
 
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
+    if(!selectedFile) return;
+
     console.log(selectedFile);
     setFile(selectedFile);
+    setUploading(true);
 
-    if (selectedFile && user) {
-      setUploading(true);
-      try {
-        //Upload file to firebase storage
-        //create reference
+    try{
+      if(user){
+        //Create a reference to the storage location
         const imageRef = ref(storage, `post/${selectedFile.name}`);
-        //upload file
-        const response = await uploadBytes(imageRef, selectedFile);
 
-        const newFileUrl = await getDownloadURL(response.ref);
+        //Upload the file
+        const uploadResult = await uploadBytes(imageRef, selectedFile);
 
-        //Create a reference to user's posts subcollection
+        //Get the file URL
+        const newFileUrl = await getDownloadURL(uploadResult.ref);
+
+        // Create a reference to the user's posts subcollection
         const postsRef = collection(db, `users/${user.uid}/posts`);
-        const newPostsRef = doc(postsRef);
+        const newPostRef = doc(postsRef);
 
-        //Add the fileUrl to the new document
-        await setDoc(newPostsRef, { fileUrl: newFileUrl, timestamp: new Date() });
+        //Add the file URL to the new document
+        await setDoc(newPostRef, { fileUrl: newFileUrl, timestamp: Timestamp.now()});
 
         //Update the local state to reflect the image URL
         setFileUrl(newFileUrl);
 
-        //Add or update the fileUrl in the user's document
-        console.log('New post added', { id: newPostsRef.id, fileUrl: newFileUrl });
-
-      } catch (e) {
-        console.error('Error adding document:', e);
-      } finally {
-        setUploading(false);
+        //Create a reference to the user's posts subcollection
+        // const postsRef = collection(db, `users/${user.uid}/posts`);
+        // const newPostsRef = doc(postsRef);
+      } else{
+        console.log('No user is signed in');
       }
+    } catch(e){
+      console.error('Error uploading file:', e);
+    } finally{
+      setUploading(true);
     }
   }
 
