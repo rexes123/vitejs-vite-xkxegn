@@ -1,12 +1,16 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import Dashboard from "../pages/Dashboard"
 import Expense from "../pages/Expense"
 import { NavLink } from "react-router-dom";
 import { Image, Col } from 'react-bootstrap';
+import { AuthContext } from "./AuthProvider";
 
 
 export default function Nav() {
 
+  const { user } = useContext(AuthContext);
+  console.log(user);
+  
   const [activeTab, setActiveTab] = useState('');
   console.log(activeTab);
 
@@ -16,10 +20,6 @@ export default function Nav() {
     } else if (activeTab === 'expenses') {
       return <Expense />
     }
-  }
-
-  const removeUser = () =>{
-    localStorage.removeItem("user")
   }
 
 
@@ -34,7 +34,6 @@ export default function Nav() {
         <NavLink to="/trips" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab">Trip</NavLink>
         <button class="nav-link" role="tab">Approvals</button>
         <button class="nav-link" role="tab">Settings</button>
-        <button onClick={removeUser}>Log out</button>
       </div>
       <div class="tab-content" id="v-pills-tabContent">
         {renderContent}
