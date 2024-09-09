@@ -2,6 +2,10 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
+import { db } from '../firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+
 
 
 export default function SignUp() {
@@ -10,6 +14,8 @@ export default function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+    const navigate = useNavigate();
 
 
     const handleName = (e) =>{
@@ -48,8 +54,13 @@ export default function SignUp() {
             );
 
             //Get user uid
-            const userId = response.user.uid;
-            console.log(`User created with UID: ${userId}`);
+            const uid = response.user.uid;
+            console.log(`User created with UID: ${uid}`);
+
+            await setDoc(doc(db, 'users', uid),{
+                name: name,
+                email: email,
+            })
 
             console.log(response.user);
 

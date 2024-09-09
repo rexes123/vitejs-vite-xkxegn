@@ -2,17 +2,30 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth"
 import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage'; 
+import { getStorage } from 'firebase/storage';
+
+// Your web app's Firebase configuration
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD09LQdj9NSE4VFx6aJh6TPmZAeTEgeqX4",
-    authDomain: "booking-system-eac7a.firebaseapp.com",
-    projectId: "booking-system-eac7a",
-    storageBucket: "booking-system-eac7a.appspot.com",
-    messagingSenderId: "432116330885",
-    appId: "1:432116330885:web:066b7044a7b5eb56c794ec",
-    measurementId: "G-0MWJS3EWM9"
-  };
+
+  apiKey: "AIzaSyCilH8jOJK4Q3kYxAcRgDIINux5xaAd27A",
+
+  authDomain: "final-capstone-assessment.firebaseapp.com",
+
+  projectId: "final-capstone-assessment",
+
+  storageBucket: "final-capstone-assessment.appspot.com",
+
+  messagingSenderId: "804488964950",
+
+  appId: "1:804488964950:web:24dad1cb3cb98f7818c4f7",
+
+  measurementId: "G-PF98VW1WQC"
+
+};
+
 
 export const app = initializeApp(firebaseConfig)
 export const analytics = getAnalytics(app);

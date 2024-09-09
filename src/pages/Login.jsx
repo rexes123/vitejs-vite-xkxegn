@@ -60,7 +60,7 @@ export default function Login() {
                     <Form.Control type="email" onChange={handleEmail} value={email} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>Example textarea</Form.Label>
+                    <Form.Label>Password</Form.Label>
                     <Form.Control type="password" onChange={handlePassword} value={password} />
                 </Form.Group>
             </Form>
