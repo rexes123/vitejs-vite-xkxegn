@@ -4,7 +4,7 @@ import Expense from "../pages/Expense"
 import { NavLink } from "react-router-dom";
 import { Image, Col } from 'react-bootstrap';
 import { AuthContext } from "./AuthProvider";
-import { Timestamp, doc, getDoc, setDoc } from "firebase/firestore";
+import { Timestamp, doc, getDoc, setDoc, collection, orderBy, query, limit, getDocs } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
@@ -23,29 +23,33 @@ export default function Nav() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   console.log(file)
+  const [loading ,setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        if (user) {
+      if(user){
+        try {
           const uid = user.uid;
           const userDoc = doc(db, 'users', uid);
           const docSnap = await getDoc(userDoc);
-
-          if (docSnap.exists()) {
+  
+          if (docSnap.exists()){
             setUserData(docSnap.data());
-          } else {
+          } else{
             console.log('No such document!');
           }
-        } else {
-          console.log('No user is signed in');
+        } catch (error) {
+          console.error(error);
+        } finally{
+          setLoading(false);
         }
-      } catch (error) {
-        console.error(error);
+      } else{
+        console.log('No user is signed in');
+        setLoading(false); //Set loading to false if no user is signed in
       }
-    }
+    };
     fetchUserData()
-  }, [])
+  }, [user])
 
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
@@ -56,7 +60,7 @@ export default function Nav() {
     setUploading(true);
 
     try{
-      if(user){
+      if(selectedFile && user){
         //Create a reference to the storage location
         const imageRef = ref(storage, `post/${selectedFile.name}`);
 
@@ -85,9 +89,34 @@ export default function Nav() {
     } catch(e){
       console.error('Error uploading file:', e);
     } finally{
-      setUploading(true);
+      setUploading(false);
     }
   }
+
+  useEffect(()=>{
+    const fetchProfileImage = async()=>{
+      if(user){
+        try{
+          //Reference to user's posts subcollection
+          const postRef = collection(db, `users/${user.uid}/posts`);
+  
+          //Query to get latest post
+          const q = query(postRef, orderBy("timestamp", "desc"), limit(1));
+          const querySnapShot = await getDocs(q);
+  
+          if (!querySnapShot.empty){
+            const latestPostDoc = querySnapShot.docs[0];
+            const latestPostData = latestPostDoc.data();
+            setFileUrl(latestPostData.fileUrl || '');
+          }
+        } catch(e){
+          console.error('Error fetching document:', e)
+        }
+      };
+    }
+
+    fetchProfileImage()
+  }, [user])
 
 
   const [activeTab, setActiveTab] = useState('');
@@ -130,20 +159,16 @@ export default function Nav() {
           onChange={handleFileChange}
           id="fileInput"
         />
-        <label htmlFor="fileInput">
-          <i
-            className="bi bi-camera"
-            style={{
-              position: 'absolute',
-              bottom: '0',
-              right: '0',
-              background: 'white',
-              borderRadius: '50%',
-              padding: '5px',
-              cursor: 'pointer',
-            }}
-          />
-        </label>
+
+        {
+          uploading && (
+            <div className="spinner-border" role="status" style={{ margin: '20px auto', display: 'block' }}>
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          )
+        }
+
+
         {userData ? (
           <div style={{ marginTop: "20px" }}>
             <form>
@@ -158,7 +183,7 @@ export default function Nav() {
         <NavLink to="/" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')} role="tab">Home</NavLink>
         <NavLink to="/expense" className={`nav-link ${activeTab === 'expenses' ? 'active' : ''}`} onClick={() => setActiveTab('expenses')} role="tab">Expenses</NavLink>
         <NavLink to="/trips" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab">Trip</NavLink>
-        <NavLink class="nav-link" role="tab">Approvals</NavLink>
+        <NavLink to="/approvals" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab">Approvals</NavLink>
         <NavLink class="nav-link" role="tab">Settings</NavLink>
         <NavLink onClick={handleLogout}>Log out</NavLink>
       </div>

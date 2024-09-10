@@ -1,6 +1,54 @@
 import Nav from "../components/Nav"
+import React, { useState } from "react"
 
 export default function NewTrips() {
+    //Define state variable for each input field
+    const [name, setName] = useState('');
+    const [type, setType] = useState('');
+    const [purpose, setPurpose] = useState('');
+    const [departForm, setDepartForm] = useState('');
+    const [destination, setDestination] = useState('');
+    const [budgetLimit, setBudgetLimit] = useState('');
+    const [flightType, setFlightType] = useState('');
+    const [checkIn, setCheckIn] = useState('');
+    const [hotel, setHotel] = useState('');
+
+    //Handle form submission
+    const handleSubmt = async(event)=>{
+        event.preventDefault();
+
+        const formData = {
+            name, 
+            type,
+            purpose,
+            departForm,
+            destination,
+            budgetLimit,
+            flightType,
+            checkIn,
+            hotel
+        };
+
+        //Send data to backend
+        try{
+            const response = await fetch('https://backend-2txi.vercel.app/trips', {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'application.json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if(response.ok){
+                console.log('Trip saved successfully');
+            }
+
+
+        } catch(error){
+            console.error(error);
+        }
+    };
+
     return (
 
         <div className="container" style={{ display: "flex" }}>
@@ -11,7 +59,7 @@ export default function NewTrips() {
                 <div class="mb-3 row">
                     <label for="staticEmail" class="col-sm-2 col-form-label" style={{width: "40%"}}>Name*</label>
                     <div class="col-sm-10" style={{width: "60%"}}>
-                        <input type="text" class="form-control" id="inputPassword" />
+                        <input type="text" class="form-control" id="inputPassword" value={name} onChange={(e)=> setName(e.target.value)}/>
                     </div>
                 </div>
                 <div class="mb-3 row">
@@ -19,13 +67,13 @@ export default function NewTrips() {
                     <div class="col-sm-10">
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked={type === 'Domestic'} onChange={(e)=> setType(e.target.value)}/>
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     Domestic
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked />
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked={type === 'International'} onChange={(e)=> setType(e.target.value)}/>
                                 <label class="form-check-label" for="flexRadioDefault2">
                                     International
                                 </label>

@@ -1,12 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
+import { useEffect, useState } from "react";
 
 export default function Trip(){
     const navigate = useNavigate()
 
+    const [data, setData] = useState([])
+
     const navToNewTrip = () =>{
         navigate("/newTrips")
     }
+
+    useEffect(()=>{
+        const getData = async()=>{
+            const response = await fetch('https://backend-2txi.vercel.app/trips')
+            const data = await response.json()
+            console.log(data)
+            setData(data)
+        }
+    
+        getData();
+    }, []);
+
+    
+    
     return (
         <div className="container" style={{ display: "flex"}}>
             <Nav />
@@ -16,24 +33,40 @@ export default function Trip(){
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">DETAILS</th>
-                        <th scope="col">MECHANT</th>
+                        <th scope="col">DESTINATION</th>
+                        <th scope="col">SUBJECT</th>
                         <th scope="col">AMOUNT</th>
                         <th scope="col">REPORT</th>
                         <th scope="col">STATUS</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                    </tr>
-                  
-                </tbody>
+
+                        {
+                            data.map((trips, index) => {
+                                return (
+                                    <tr key={trips.id}>
+                                        <th scope="row"><input type="checkbox"/></th>
+                                        <td>{trips.destination}</td>
+                                        <td>{trips.purpose}</td>
+                                        <td>{trips.budget_limit}</td>
+                                        <td>{trips.create_at}</td>
+                                        <td>{trips.status}</td>
+                                        
+
+                                        {/* <td>{expense.merchant}</td>
+                                        <td>{expense.date}</td>
+                                        <td>{expense.total}</td> */}
+                                        {/* <td>{expense.category}</td>
+                                        <td>{expense.description}</td> */}
+                                        {/* <td>{expense.employee}</td> */}
+
+                                    </tr>
+                                )
+                            })
+                        }
+
+                    </tbody>
             </table>
             </div>
            

@@ -9,6 +9,10 @@ export default function Dashboard() {
         navigate("/expense")
     }
 
+    const navToTrip = ()=>{
+        navigate("/trips")
+    }
+
     return (
         <div className="container" style={{ display: "flex" }}>
             <Nav />
@@ -110,7 +114,7 @@ export default function Dashboard() {
                             <i class="bi bi-files"></i>
                             <span>+Create report</span>
                         </div>
-                        <div class="card col-sm">
+                        <div class="card col-sm" onClick={navToTrip}>
                             <i class="bi bi-airplane"></i>
                             <span>+Create trip</span>
                         </div>
