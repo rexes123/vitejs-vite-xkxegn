@@ -16,37 +16,38 @@ export default function NewTrips() {
     //Handle form submission
     const handleSubmit = async(event)=>{
         event.preventDefault();
+        console.log('Submit')
 
-        const formData = {
-            name, 
-            type,
-            purpose,
-            departForm,
-            destination,
-            budgetLimit,
-            flightType,
-            checkIn,
-            hotel
-        };
+        // const formData = {
+        //     name, 
+        //     type,
+        //     purpose,
+        //     departForm,
+        //     destination,
+        //     budgetLimit,
+        //     flightType,
+        //     checkIn,
+        //     hotel
+        // };
 
-        //Send data to backend
-        try{
-            const response = await fetch('https://backend-2txi.vercel.app/trips', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
+        // //Send data to backend
+        // try{
+        //     const response = await fetch('https://backend-2txi.vercel.app/trips', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify(formData)
+        //     });
 
-            if(response.ok){
-                console.log('Trip saved successfully');
-            }
+        //     if(response.ok){
+        //         console.log('Trip saved successfully');
+        //     }
 
 
-        } catch(error){
-            console.error(error);
-        }
+        // } catch(error){
+        //     console.error(error);
+        // }
     };
 
     return (
@@ -54,6 +55,8 @@ export default function NewTrips() {
         <div className="container" style={{ display: "flex" }}>
             <Nav />
             <div class="container">
+
+                <form onSubmit={handleSubmit}>
                 <h3>New Trip</h3>
                 <hr />
                 <div class="mb-3 row">
@@ -190,6 +193,7 @@ export default function NewTrips() {
                         <button type="submit" class="btn btn-secondary">Save</button>
                     </div>
                 </div>
+                </form>
 
 
             </div>
