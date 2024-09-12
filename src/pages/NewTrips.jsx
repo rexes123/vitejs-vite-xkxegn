@@ -6,18 +6,25 @@ export default function NewTrips() {
     const [name, setName] = useState('');
     const [type, setType] = useState('');
     const [purpose, setPurpose] = useState('');
-    const [departForm, setDepartForm] = useState('');
+    const [flight, setFlight] = useState('');
+    const [depart_form, setDepart_form] = useState('');
     const [destination, setDestination] = useState('');
-    const [budgetLimit, setBudgetLimit] = useState('');
-    const [flightType, setFlightType] = useState('');
-    const [checkIn, setCheckIn] = useState('');
+    const [budget_limit, setBudget_limit] = useState('');
+    const [start_date, setStart_date] = useState('');
+    const [end_date, setEnd_date] = useState('');
+    const [check_in, setCheck_in] = useState('');
+    const [check_out, setCheck_out] = useState('')
     const [hotel, setHotel] = useState('');
 
     console.log(name);
     console.log(type);
     console.log(purpose)
-    console.log(departForm);
+    console.log(depart_form);
     console.log(destination)
+    console.log(check_out)
+    console.log(hotel);
+
+
     //Handle form submission
     const handleSubmit = async(event)=>{
         event.preventDefault();
@@ -27,11 +34,14 @@ export default function NewTrips() {
              name, 
              type,
              purpose,
-             departForm,
+             flight,
+             depart_form,
              destination,
-             budgetLimit,
-             flightType,
-             checkIn,
+             budget_limit: parseInt(budget_limit),
+             start_date,
+             end_date,
+             check_in,
+             check_out,
              hotel
          };
 
@@ -47,6 +57,8 @@ export default function NewTrips() {
 
              if(response.ok){
                  console.log('Trip saved successfully');
+             } else{
+                console.error('Failed to save trip');
              }
 
 
@@ -105,16 +117,13 @@ export default function NewTrips() {
                     <div class="col-sm-10">
                         <div>
                             <div class="form-check">
-                                {/* const handleFlightType(e){
-                                 setFlightType(e.target.value)   
-                                } */}
-                                <input class="form-check-input" type="radio" name="flightType" id="oneWay" value="one-way" checked={flightType === 'one-way'} onChange={(e)=>setFlightType(e.target.value)}/>
+                                <input class="form-check-input" type="radio" name="flightType" id="oneWay" value="one-way" checked={flight === 'one-way'} onChange={(e)=>setFlight(e.target.value)}/>
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     One-way
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flightType" id="roundTrip" value="roundTrip" checked={flightType === 'roundTrip'} onChange={(e)=>setFlightType(e.target.value)}/>
+                                <input class="form-check-input" type="radio" name="flightType" id="roundTrip" value="roundTrip" checked={flight === 'roundTrip'} onChange={(e)=>setFlight(e.target.value)}/>
                                 <label class="form-check-label" for="flexRadioDefault2">
                                     Roundtrip
                                 </label>
@@ -129,21 +138,21 @@ export default function NewTrips() {
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label">Depart from*</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="departFrom" value={departForm} onChange={(e)=> setDepartForm(e.target.value)} />
+                                <input type="datetime-local" class="form-control" id="departFrom" value={depart_form} onChange={(e)=> setDepart_form(e.target.value)} />
                             </div>
                         </div>
 
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label">Destination*</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputPassword" />
+                                <input type="datetime-local" class="form-control" id="inputPassword" value={destination} onChange={(e)=> setDestination(e.target.value)}/>
                             </div>
                         </div>
 
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label">Budget limit*</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputPassword" />
+                                <input type="number" class="form-control" id="inputPassword" value={budget_limit} onChange={(e)=> setBudget_limit(e.target.value)}/>
                             </div>
                         </div>
                     </div>
@@ -152,13 +161,13 @@ export default function NewTrips() {
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label">Date</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputPassword" />
+                                <input type="date" class="form-control" id="inputPassword" value={start_date} onChange={(e)=> setStart_date(e.target.value)}/>
                             </div>
                         </div>
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label">Date</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputPassword" />
+                                <input type="date" class="form-control" id="inputPassword" value={end_date} onChange={(e)=> setEnd_date(e.target.value)}/>
                             </div>
                         </div>
                     </div>
@@ -170,13 +179,13 @@ export default function NewTrips() {
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label" style={{width: "40%"}}>Check-in*</label>
                             <div class="col-sm-10" style={{width: "60%"}}>
-                                <input type="text" class="form-control" id="inputPassword" />
+                                <input type="date" class="form-control" id="checkIn" value={check_in} onChange={(e)=> setCheck_in(e.target.value)}/>
                             </div>
                         </div>
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label" style={{width: "40%"}}>Check-out*</label>
                             <div class="col-sm-10" style={{width: "60%"}}>
-                                <input type="text" class="form-control" id="inputPassword" />
+                                <input type="date" class="form-control" id="checkOut" value={check_out} onChange={(e)=> setCheck_out(e.target.value)}/>
                             </div>
                         </div>
                     </div>
@@ -191,7 +200,7 @@ export default function NewTrips() {
                         <div class="mb-3 row" style={{width: "104%"}}>
                             <label for="staticEmail" class="col-sm-2 col-form-label" style={{width: "20%"}}>Hotel*</label>
                             <div class="col-sm-10" style={{width: "80%"}}>
-                                <input type="text" class="form-control" id="inputPassword" />
+                                <input type="text" class="form-control" id="inputPassword" value={hotel} onChange={(e)=>setHotel(e.target.value)}/>
                             </div>
                         </div>
                     </div>
