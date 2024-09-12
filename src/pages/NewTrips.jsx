@@ -33,7 +33,7 @@ export default function NewTrips() {
         try{
             const response = await fetch('https://backend-2txi.vercel.app/trips', {
                 method: 'POST',
-                header: {
+                headers: {
                     'Content-Type': 'application.json'
                 },
                 body: JSON.stringify(formData)
