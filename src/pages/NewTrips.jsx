@@ -13,41 +13,46 @@ export default function NewTrips() {
     const [checkIn, setCheckIn] = useState('');
     const [hotel, setHotel] = useState('');
 
+    console.log(name);
+    console.log(type);
+    console.log(purpose)
+    console.log(departForm);
+    console.log(destination)
     //Handle form submission
     const handleSubmit = async(event)=>{
         event.preventDefault();
         console.log('Submit')
 
-        // const formData = {
-        //     name, 
-        //     type,
-        //     purpose,
-        //     departForm,
-        //     destination,
-        //     budgetLimit,
-        //     flightType,
-        //     checkIn,
-        //     hotel
-        // };
+         const formData = {
+             name, 
+             type,
+             purpose,
+             departForm,
+             destination,
+             budgetLimit,
+             flightType,
+             checkIn,
+             hotel
+         };
 
         // //Send data to backend
-        // try{
-        //     const response = await fetch('https://backend-2txi.vercel.app/trips', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify(formData)
-        //     });
+         try{
+             const response = await fetch('https://backend-2txi.vercel.app/trips', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json'
+                 },
+                 body: JSON.stringify(formData)
+             });
 
-        //     if(response.ok){
-        //         console.log('Trip saved successfully');
-        //     }
+             if(response.ok){
+                 console.log('Trip saved successfully');
+             }
 
 
-        // } catch(error){
-        //     console.error(error);
-        // }
+         } catch(error){
+             console.error(error);
+         }
     };
 
     return (
@@ -70,13 +75,13 @@ export default function NewTrips() {
                     <div class="col-sm-10">
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked={type === 'Domestic'} onChange={(e)=> setType(e.target.value)}/>
+                                <input class="form-check-input" type="radio" name="type" value='domestic' id="flexRadioDefault1" checked={type === 'domestic'} onChange={(e)=> setType(e.target.value)}/>
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     Domestic
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked={type === 'International'} onChange={(e)=> setType(e.target.value)}/>
+                                <input class="form-check-input" type="radio" name="type" value='international' id="flexRadioDefault2" checked={type === 'international'} onChange={(e)=> setType(e.target.value)}/>
                                 <label class="form-check-label" for="flexRadioDefault2">
                                     International
                                 </label>
@@ -89,7 +94,7 @@ export default function NewTrips() {
                 <div class="mb-3 row">
                     <label for="staticEmail" class="col-sm-2 col-form-label">Purpose*</label>
                     <div class="col-sm-10">
-                        <textarea type="text" class="form-control" id="inputPassword" />
+                        <textarea class="form-control" id="inputPassword" value={purpose} onChange={(e)=>setPurpose(e.target.value)}/>
                     </div>
                 </div>
 
@@ -100,13 +105,16 @@ export default function NewTrips() {
                     <div class="col-sm-10">
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault1" />
+                                {/* const handleFlightType(e){
+                                 setFlightType(e.target.value)   
+                                } */}
+                                <input class="form-check-input" type="radio" name="flightType" id="oneWay" value="one-way" checked={flightType === 'one-way'} onChange={(e)=>setFlightType(e.target.value)}/>
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     One-way
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2" checked />
+                                <input class="form-check-input" type="radio" name="flightType" id="roundTrip" value="roundTrip" checked={flightType === 'roundTrip'} onChange={(e)=>setFlightType(e.target.value)}/>
                                 <label class="form-check-label" for="flexRadioDefault2">
                                     Roundtrip
                                 </label>
@@ -121,7 +129,7 @@ export default function NewTrips() {
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label">Depart from*</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputPassword" />
+                                <input type="text" class="form-control" id="departFrom" value={departForm} onChange={(e)=> setDepartForm(e.target.value)} />
                             </div>
                         </div>
 
