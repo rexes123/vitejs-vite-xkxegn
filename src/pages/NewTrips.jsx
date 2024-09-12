@@ -14,7 +14,7 @@ export default function NewTrips() {
     const [hotel, setHotel] = useState('');
 
     //Handle form submission
-    const handleSubmt = async(event)=>{
+    const handleSubmit = async(event)=>{
         event.preventDefault();
 
         const formData = {
@@ -34,7 +34,7 @@ export default function NewTrips() {
             const response = await fetch('https://backend-2txi.vercel.app/trips', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application.json'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(formData)
             });
@@ -187,7 +187,7 @@ export default function NewTrips() {
 
                     <div style={{ width: "30%", display: "flex", justifyContent: "flex-end", gap: "10px" }}>
                         <button type="button" class="btn btn-primary">Save draft</button>
-                        <button type="button" class="btn btn-secondary">Save</button>
+                        <button type="submit" class="btn btn-secondary">Save</button>
                     </div>
                 </div>
 
