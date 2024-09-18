@@ -3,7 +3,7 @@ import Nav from "../components/Nav";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../components/AuthProvider";
 
-export default function Approvas() {
+export default function Approvals() {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext); // Get user from context
     const [data, setData] = useState([]);
@@ -44,10 +44,22 @@ export default function Approvas() {
     };
 
     //Handle select change for admin 
-    const handleStatusChange = async (id, newStatus)=>{
-        //Update the status in the backend
-        await fetch(``)
-    }
+    // const handleStatusChange = async (id, newStatus)=>{
+
+    //     //Find tripToUpdate by id to get its current data
+    //     const tripToUpdate = data.find(trip=> trip.id === id);
+
+    //     if (tripToUpdate){
+    //         const updatedTrip = {
+    //             ...tripToUpdate,
+    //             status: newStatus //Update the status
+    //         };
+
+    //         //Update the status in the backend
+    //         await fetch(`https://backend`)
+    //     }
+        
+    // }
 
     const handleDeleteSelected = async () => {
         const idsToDelete = Array.from(selectedTrips);
