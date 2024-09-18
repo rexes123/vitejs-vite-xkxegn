@@ -2,75 +2,105 @@ import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
 import { useEffect, useState } from "react";
 
-export default function Trip(){
-    const navigate = useNavigate()
+export default function Trip() {
+    const navigate = useNavigate();
+    const [data, setData] = useState([]);
+    const [selectedTrips, setSelectedTrips] = useState(new Set());
 
-    const [data, setData] = useState([])
+    const navToNewTrip = () => {
+        navigate("/newTrips");
+    };
 
-    const navToNewTrip = () =>{
-        navigate("/newTrips")
-    }
+    useEffect(() => {
+        const getData = async () => {
+            const response = await fetch('https://backend-2txi.vercel.app/trips');
+            const data = await response.json();
+            console.log(data);
+            setData(data);
+        };
 
-    useEffect(()=>{
-        const getData = async()=>{
-            const response = await fetch('https://backend-2txi.vercel.app/trips')
-            const data = await response.json()
-            console.log(data)
-            setData(data)
-        }
-    
         getData();
     }, []);
 
-    
-    
+    const handleCheckboxChange = (id) => {
+        const updatedSelection = new Set(selectedTrips);
+        if (updatedSelection.has(id)) {
+            updatedSelection.delete(id);
+        } else {
+            updatedSelection.add(id);
+        }
+        setSelectedTrips(updatedSelection);
+    };
+
+    const handleDeleteSelected = async () => {
+        const idsToDelete = Array.from(selectedTrips);
+        if (idsToDelete.length === 0) {
+            alert("No trips selected for deletion.");
+            return;
+        }
+
+        await Promise.all(idsToDelete.map(id => 
+            fetch(`https://backend-2txi.vercel.app/trips/${id}`, {
+                method: 'DELETE',
+            })
+        ));
+
+        setData(prevData => {
+            const newData = [...prevData];
+            idsToDelete.forEach(id => {
+                const index = newData.findIndex(trip => trip.id === id);
+                if (index !== -1) {
+                    newData.splice(index, 1);
+                }
+            });
+            return newData;
+        });
+
+        setSelectedTrips(new Set());
+    };
+
     return (
-        <div className="container" style={{ display: "flex"}}>
+        <div className="container" style={{ display: "flex" }}>
             <Nav />
-            <div style={{ width: "100%"}}>
-                <button onClick={navToNewTrip}>+ New trip</button>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">DESTINATION</th>
-                        <th scope="col">SUBJECT</th>
-                        <th scope="col">AMOUNT</th>
-                        <th scope="col">REPORT</th>
-                        <th scope="col">STATUS</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div style={{ width: "100%" }}>
+                <button onClick={navToNewTrip} type="button" class="btn btn-success">+ New trip</button>
 
-                        {
-                            data.map((trips, index) => {
-                                return (
-                                    <tr key={trips.id}>
-                                        <th scope="row"><input type="checkbox"/></th>
-                                        <td>{trips.destination}</td>
-                                        <td>{trips.purpose}</td>
-                                        <td>{trips.budget_limit}</td>
-                                        <td>{trips.create_at}</td>
-                                        <td>{trips.status}</td>
-                                        
+                {/* Conditionally render the Delete button */}
+                {selectedTrips.size > 0 && (
+                    <button onClick={handleDeleteSelected} type="button" class="btn btn-danger">Delete Selected</button>
+                )}
 
-                                        {/* <td>{expense.merchant}</td>
-                                        <td>{expense.date}</td>
-                                        <td>{expense.total}</td> */}
-                                        {/* <td>{expense.category}</td>
-                                        <td>{expense.description}</td> */}
-                                        {/* <td>{expense.employee}</td> */}
-
-                                    </tr>
-                                )
-                            })
-                        }
-
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">DESTINATION</th>
+                            <th scope="col">SUBJECT</th>
+                            <th scope="col">AMOUNT</th>
+                            <th scope="col">REPORT</th>
+                            <th scope="col">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((trips) => (
+                            <tr key={trips.id}>
+                                <th scope="row">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedTrips.has(trips.id)}
+                                        onChange={() => handleCheckboxChange(trips.id)}
+                                    />
+                                </th>
+                                <td>{trips.destination}</td>
+                                <td>{trips.purpose}</td>
+                                <td>{trips.budget_limit}</td>
+                                <td>{trips.create_at}</td>
+                                <td>{trips.status}</td>
+                            </tr>
+                        ))}
                     </tbody>
-            </table>
+                </table>
             </div>
-           
-
         </div>
-    )
+    );
 }
