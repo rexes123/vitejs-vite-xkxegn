@@ -3,7 +3,7 @@ import Nav from "../components/Nav";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../components/AuthProvider";
 
-export default function Trip() {
+export default function Approvas() {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext); // Get user from context
     const [data, setData] = useState([]);
@@ -42,6 +42,12 @@ export default function Trip() {
         }
         setSelectedTrips(updatedSelection);
     };
+
+    //Handle select change for admin 
+    const handleStatusChange = async (id, newStatus)=>{
+        //Update the status in the backend
+        await fetch(``)
+    }
 
     const handleDeleteSelected = async () => {
         const idsToDelete = Array.from(selectedTrips);
@@ -99,8 +105,11 @@ export default function Trip() {
                                 
                                 {/* Conditionally render based on user role */}
                                 {userRole === 'admin' ? (
-                                    <select className="form-select" aria-label="Default select example">
-                                        <option selected>Open this select menu</option>
+                                    <select 
+                                    className="form-select" 
+                                    value={trips.status} // Set current status as the value
+                                    onChange={(e)=> handleStatusChange(trips.id, e.target.value)} //Handle change
+                                    >
                                         <option value="approved">Approved</option>
                                         <option value="rejected">Rejected</option>
                                         <option value="pending">Pending</option>
