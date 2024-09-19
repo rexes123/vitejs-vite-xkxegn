@@ -1,5 +1,6 @@
 import Nav from "../components/Nav"
 import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
 
@@ -12,6 +13,45 @@ export default function Dashboard() {
     const navToTrip = ()=>{
         navigate("/trips")
     }
+
+    const [pendingStatus, setPendingStatus] = useState(parseInt)
+    console.log(pendingStatus)
+
+    const [data, setData] = useState([])
+    console.log(data);
+
+    data.forEach(()=>{
+        const pending= data.filter(item => item.status === 'pending');
+        setPendingStatus(pending.length);
+
+        const approved = data.filter(item => item.status === 'Approved');
+        console.log(approved.length);
+
+    }, [data])
+
+
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const [expensesResponse, tripsResponse] = await Promise.all([
+                    fetch('https://backend-2txi.vercel.app/expenses'),
+                    fetch('https://backend-2txi.vercel.app/trips')
+                ]);
+                
+                const expensesData = await expensesResponse.json();
+                const tripsData = await tripsResponse.json();
+
+                // Combine data
+                const combinedData = [...expensesData, ...tripsData];
+
+                setData(combinedData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        getData();
+    }, []);
+
 
     return (
         <div className="container" style={{ display: "flex" }}>
