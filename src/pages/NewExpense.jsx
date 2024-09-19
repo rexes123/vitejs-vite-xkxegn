@@ -28,6 +28,8 @@ export default function NewExpense() {
             employee
         };
 
+        console.log(obj);
+
         try {
             const response = await fetch('https://backend-2txi.vercel.app/expenses', {
                 method: 'POST',

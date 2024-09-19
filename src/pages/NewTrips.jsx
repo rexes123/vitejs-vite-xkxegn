@@ -1,5 +1,6 @@
 import Nav from "../components/Nav"
 import React, { useState } from "react"
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function NewTrips() {
     //Define state variable for each input field
@@ -23,6 +24,9 @@ export default function NewTrips() {
     console.log(destination)
     console.log(check_out)
     console.log(hotel);
+
+
+    const navigate = useNavigate();
 
 
     //Handle form submission
@@ -66,6 +70,7 @@ export default function NewTrips() {
          } catch(error){
              console.error(error);
          }
+         navigate('/trips')
     };
 
     return (
