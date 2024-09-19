@@ -7,7 +7,7 @@ export default function NewTrips() {
     const [type, setType] = useState('');
     const [purpose, setPurpose] = useState('');
     const [flight, setFlight] = useState('');
-    const [depart_form, setDepart_form] = useState('');
+    const [depart_from, setDepart_from] = useState('');
     const [destination, setDestination] = useState('');
     const [budget_limit, setBudget_limit] = useState('');
     const [start_date, setStart_date] = useState('');
@@ -19,7 +19,7 @@ export default function NewTrips() {
     console.log(name);
     console.log(type);
     console.log(purpose)
-    console.log(depart_form);
+    console.log(depart_from);
     console.log(destination)
     console.log(check_out)
     console.log(hotel);
@@ -35,7 +35,7 @@ export default function NewTrips() {
              type,
              purpose,
              flight,
-             depart_form,
+             depart_from,
              destination,
              budget_limit: parseInt(budget_limit),
              start_date,
@@ -58,7 +58,8 @@ export default function NewTrips() {
              if(response.ok){
                  console.log('Trip saved successfully');
              } else{
-                console.error('Failed to save trip');
+                const errorData = await response.json();
+                console.error('Failed to save trip', response.status, errorData);
              }
 
 
@@ -138,7 +139,7 @@ export default function NewTrips() {
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label">Depart from*</label>
                             <div class="col-sm-10">
-                                <input type="datetime-local" class="form-control" id="departFrom" value={depart_form} onChange={(e)=> setDepart_form(e.target.value)} />
+                                <input type="datetime-local" class="form-control" id="departFrom" value={depart_from} onChange={(e)=> setDepart_from(e.target.value)} />
                             </div>
                         </div>
 

@@ -100,7 +100,7 @@ export default function Expense() {
                                     <td>{expense.subject}</td>
                                     <td>{expense.merchant}</td>
                                     <td>{expense.date}</td>
-                                    <td>{expense.total}</td>
+                                    <td>{expense.amount}</td>
                                     {/* Additional fields can be added here if needed */}
                                 </tr>
                             ))
