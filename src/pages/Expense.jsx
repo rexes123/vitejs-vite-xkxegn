@@ -11,6 +11,8 @@ export default function Expense() {
         navigate("/newExpense");
     };
 
+    console.log(data);
+
     useEffect(() => {
         const getData = async () => {
             const response = await fetch('https://backend-2txi.vercel.app/expenses');
@@ -100,7 +102,7 @@ export default function Expense() {
                                     <td>{expense.subject}</td>
                                     <td>{expense.merchant}</td>
                                     <td>{expense.date}</td>
-                                    <td>{expense.amount}</td>
+                                    <td>{expense.total}</td>
                                     {/* Additional fields can be added here if needed */}
                                 </tr>
                             ))
