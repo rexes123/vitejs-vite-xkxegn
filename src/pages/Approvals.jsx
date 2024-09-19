@@ -44,22 +44,29 @@ export default function Approvals() {
     };
 
     //Handle select change for admin 
-    // const handleStatusChange = async (id, newStatus)=>{
-
-    //     //Find tripToUpdate by id to get its current data
-    //     const tripToUpdate = data.find(trip=> trip.id === id);
-
-    //     if (tripToUpdate){
-    //         const updatedTrip = {
-    //             ...tripToUpdate,
-    //             status: newStatus //Update the status
-    //         };
-
-    //         //Update the status in the backend
-    //         await fetch(`https://backend`)
-    //     }
-        
-    // }
+    const handleStatusChange = async (id, newStatus) => {
+        console.log(`Updating status fro trip ID: ${id} to ${newStatus}`);
+        // Update status in the backend
+        const response = await fetch(`https://backend-2txi.vercel.app/trips/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: newStatus }), // Send only the status
+        });
+    
+        if (response.ok) {
+            const updatedTrip = await response.json(); // Get the updated trip
+            setData(prevData => 
+                prevData.map(trip => 
+                    trip.id === id ? updatedTrip : trip
+                )
+            );
+        } else {
+            alert('Failed to update status.'); // Error handling
+        }
+    };
+    
 
     const handleDeleteSelected = async () => {
         const idsToDelete = Array.from(selectedTrips);
@@ -92,7 +99,7 @@ export default function Approvals() {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col"><input type="checkbox"/></th>
                             <th scope="col">Staff Name</th>
                             <th scope="col">CATEGORY</th>
                             <th scope="col">AMOUNT</th>

@@ -32,6 +32,15 @@ export default function Trip() {
         setSelectedTrips(updatedSelection);
     };
 
+    const handleSelectAll = (event)=>{
+        if(event.target.checked){
+            const allTripIds = new Set(data.map(trip => trip.id));
+            setSelectedTrips(allTripIds);
+        } else{
+            setSelectedTrips(new Set());
+        }
+    }
+
     const handleDeleteSelected = async () => {
         const idsToDelete = Array.from(selectedTrips);
         if (idsToDelete.length === 0) {
@@ -73,10 +82,17 @@ export default function Trip() {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col">
+                                <input 
+                                type="checkbox" 
+                                class="deleteAll"
+                                onChange={handleSelectAll}
+                                checked={selectedTrips.size === data.length && data.length > 0}
+                                />
+                                </th>
                             <th scope="col">DESTINATION</th>
                             <th scope="col">SUBJECT</th>
-                            <th scope="col">AMOUNT</th>
+                            <th scope="col">AMOUNT</th>  
                             <th scope="col">REPORT</th>
                             <th scope="col">STATUS</th>
                         </tr>

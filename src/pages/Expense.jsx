@@ -20,7 +20,7 @@ export default function Expense() {
         getData();
     }, []);
 
-    const handleCheckboxChange = (id) => {
+    const handleCheckBoxChange = (id) => {
         const updatedSelection = new Set(selectedExpenses);
         if (updatedSelection.has(id)) {
             updatedSelection.delete(id);
@@ -29,6 +29,15 @@ export default function Expense() {
         }
         setSelectedExpenses(updatedSelection);
     };
+
+    const handleSelectAll = (event)=>{
+        if(event.target.checked){
+            const allExpenseIds = new Set(data.map(trip => trip.id));
+            setSelectedExpenses(allExpenseIds);
+        } else{
+            setSelectedExpenses(new Set());
+        }
+    }
 
     const handleDeleteSelected = async () => {
         const idsToDelete = Array.from(selectedExpenses);
@@ -63,7 +72,13 @@ export default function Expense() {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th scope="col"><input type="checkbox" /></th>
+                            <th scope="col">
+                                <input 
+                                type="checkbox" 
+                                onChange={handleSelectAll}
+                                checked={selectedExpenses.size == data.length && data.length > 0}
+                                />
+                                </th>
                             <th scope="col">DETAILS</th>
                             <th scope="col">MERCHANT</th>
                             <th scope="col">REPORT</th>
@@ -79,7 +94,7 @@ export default function Expense() {
                                         <input
                                             type="checkbox"
                                             checked={selectedExpenses.has(expense.id)}
-                                            onChange={() => handleCheckboxChange(expense.id)}
+                                            onChange={() => handleCheckBoxChange(expense.id)}
                                         />
                                     </th>
                                     <td>{expense.subject}</td>
