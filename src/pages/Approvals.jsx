@@ -7,6 +7,7 @@ export default function Approvals() {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext); // Get user from context
     const [data, setData] = useState([]);
+    console.log(data);
     const [selectedTrips, setSelectedTrips] = useState(new Set());
     const [userRole, setUserRole] = useState('user'); // Default role
 
@@ -16,11 +17,23 @@ export default function Approvals() {
 
     useEffect(() => {
         const getData = async () => {
-            const response = await fetch('https://backend-2txi.vercel.app/trips');
-            const data = await response.json();
-            setData(data);
-        };
+            try {
+                const [expensesResponse, tripsResponse] = await Promise.all([
+                    fetch('https://backend-2txi.vercel.app/expenses'),
+                    fetch('https://backend-2txi.vercel.app/trips')
+                ]);
+                
+                const expensesData = await expensesResponse.json();
+                const tripsData = await tripsResponse.json();
 
+                // Combine data
+                const combinedData = [...expensesData, ...tripsData];
+
+                setData(combinedData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
         getData();
     }, []);
 
@@ -100,7 +113,7 @@ export default function Approvals() {
                     <thead>
                         <tr>
                             <th scope="col"><input type="checkbox"/></th>
-                            <th scope="col">Staff Name</th>
+                            <th scope="col">Name</th>
                             <th scope="col">CATEGORY</th>
                             <th scope="col">AMOUNT</th>
                             <th scope="col">FREQUENCY</th>
@@ -119,7 +132,7 @@ export default function Approvals() {
                                 </th>
                                 <td>{trips.name}</td>
                                 <td>{trips.category}</td>
-                                <td>{trips.budget_limit}</td>
+                                <td>{trips.amount}</td>
                                 <td>{trips.create_at}</td>
                                 
                                 {/* Conditionally render based on user role */}

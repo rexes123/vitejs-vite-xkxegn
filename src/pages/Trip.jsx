@@ -109,7 +109,7 @@ export default function Trip() {
                                 </th>
                                 <td>{trips.destination}</td>
                                 <td>{trips.purpose}</td>
-                                <td>{trips.budget_limit}</td>
+                                <td>{trips.amount}</td>
                                 <td>{trips.create_at}</td>
                                 <td>{trips.status}</td>
                             </tr>
