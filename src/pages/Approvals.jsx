@@ -7,6 +7,7 @@ export default function Approvals() {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
     const [data, setData] = useState([]);
+    console.log(data);
     const [selectedTrips, setSelectedTrips] = useState(new Set());
     const [userRole, setUserRole] = useState('user');
     const [selectedImage, setSelectImage] = useState(null);
@@ -93,7 +94,7 @@ export default function Approvals() {
                             <th scope="col">CATEGORY</th>
                             <th scope="col">AMOUNT</th>
                             <th scope="col">FREQUENCY</th>
-                            <th>View</th>
+                            <th>VIEW</th>
                             <th scope="col">ACTION</th>
                         </tr>
                     </thead>
@@ -112,11 +113,11 @@ export default function Approvals() {
                                 <td>{trip.amount}</td>
                                 <td>{trip.create_at}</td>
                                 <td>
-                                    {/* {trip.invoiceUrl && (
-                                        <i className="bi bi-eye" onClick={() => handleViewImage(trip.invoiceUrl)} style={{ cursor: 'pointer' }}>asda</i>
-                                    )} */}
-                                    <i className="bi bi-eye"  onClick={() => handleViewImage(trip.invoiceUrl)} style={{ cursor: 'pointer' }}></i>
+                                        {/* {trip.invoiceUrl && ( */}
+                                            <i className="bi bi-eye"  onClick={() => handleViewImage(trip.invoiceUrl)} style={{ cursor: 'pointer' }}></i>
+                                        {/* )} */}
                                 </td>
+                                <td>{trip.invoiceUrl}</td>
 
                                 {userRole === 'admin' ? (
                                     <td>
