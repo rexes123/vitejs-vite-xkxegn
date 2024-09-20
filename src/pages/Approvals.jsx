@@ -117,6 +117,7 @@ export default function Approvals() {
                             <th scope="col">CATEGORY</th>
                             <th scope="col">AMOUNT</th>
                             <th scope="col">FREQUENCY</th>
+                            <th>View</th>
                             <th scope="col">ACTION</th>
                         </tr>
                     </thead>
@@ -134,6 +135,7 @@ export default function Approvals() {
                                 <td>{trips.category}</td>
                                 <td>{trips.amount}</td>
                                 <td>{trips.create_at}</td>
+                                <td><i class="bi bi-eye"></i></td>
                                 
                                 {/* Conditionally render based on user role */}
                                 {userRole === 'admin' ? (
