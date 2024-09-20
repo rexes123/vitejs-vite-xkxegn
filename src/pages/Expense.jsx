@@ -102,13 +102,6 @@ export default function Expense() {
                                     <td>{expense.subject}</td>
                                     <td>{expense.merchant}</td>
                                     <td>{expense.date}</td>
-<<<<<<< main
-                                    <td>{expense.amount}</td>
-                                    <td>{expense.status}</td>
-=======
-                                    <td>{expense.total}</td>
->>>>>>> c2a2fe0abc10cc6e283b130c6f02c6f3932d2054
-                                    {/* Additional fields can be added here if needed */}
                                 </tr>
                             ))
                         }
