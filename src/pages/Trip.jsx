@@ -15,7 +15,7 @@ export default function Trip() {
         const getData = async () => {
             const response = await fetch('https://backend-2txi.vercel.app/trips');
             const data = await response.json();
-            console.log(data);
+            console.log('Response from server:', data);
             setData(data);
         };
 
