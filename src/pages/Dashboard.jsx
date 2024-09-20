@@ -16,6 +16,7 @@ export default function Dashboard() {
     const [pendingStatus, setPendingStatus] = useState(0);
     const [data, setData] = useState([]);
     const [expenses, setExpenses] = useState([]); // Store actual expenses
+    // console.log(expenses.create_timestamp);
     const [trips, setTrips] = useState(0);
 
     useEffect(() => {
@@ -107,7 +108,10 @@ export default function Dashboard() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {expenses.slice(0, 3).map((expense, index) => (
+                                {expenses
+                                .sort((a,b)=> new Date(b.create_timestamp) - new Date(a.create_timestamp))
+                                .slice(0, 3)
+                                .map((expense, index) => (
                                     <tr key={index}>
                                         <th scope="row">{index + 1}</th>
                                         <td>{expense.employee}</td> {/* Adjust this field */}
