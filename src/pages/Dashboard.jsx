@@ -18,7 +18,11 @@ export default function Dashboard() {
     console.log(pendingStatus)
 
     const [data, setData] = useState([])
-    // console.log(data);
+    console.log(data);
+
+    const [trips, setTrips] = useState(null);
+
+
 
     useEffect(()=>{
         data.forEach(()=>{
@@ -26,6 +30,17 @@ export default function Dashboard() {
             setPendingStatus(pending.length);
         }, [data])
     })
+
+
+    useEffect(()=>{
+        const getTrips = async()=>{
+            const endpoint = 'https://backend-2txi.vercel.app/trips'
+            const response = await fetch(endpoint);
+            const data = await response.json();
+            console.log(data);
+        }
+        getTrips()
+    }, [])    
 
 
     useEffect(() => {
@@ -39,6 +54,7 @@ export default function Dashboard() {
                 const expensesData = await expensesResponse.json();
                 console.log(expensesData);
                 const tripsData = await tripsResponse.json();
+                setTrips(tripsData)
                 console.log(tripsData);
 
                 // Combine data
