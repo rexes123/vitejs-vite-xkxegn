@@ -14,20 +14,18 @@ export default function Dashboard() {
         navigate("/trips")
     }
 
-    const [pendingStatus, setPendingStatus] = useState(parseInt)
+    const [pendingStatus, setPendingStatus] = useState(0)
     console.log(pendingStatus)
 
     const [data, setData] = useState([])
-    console.log(data);
+    // console.log(data);
 
-    data.forEach(()=>{
-        const pending= data.filter(item => item.status === 'pending');
-        setPendingStatus(pending.length);
-
-        const approved = data.filter(item => item.status === 'Approved');
-        console.log(approved.length);
-
-    }, [data])
+    useEffect(()=>{
+        data.forEach(()=>{
+            const pending= data.filter(item => item.status === 'pending');
+            setPendingStatus(pending.length);
+        }, [data])
+    })
 
 
     useEffect(() => {
@@ -39,7 +37,9 @@ export default function Dashboard() {
                 ]);
                 
                 const expensesData = await expensesResponse.json();
+                console.log(expensesData);
                 const tripsData = await tripsResponse.json();
+                console.log(tripsData);
 
                 // Combine data
                 const combinedData = [...expensesData, ...tripsData];
@@ -67,7 +67,7 @@ export default function Dashboard() {
                                 <i class="bi bi-clock"></i>
                                 <div class="pending-info">
                                     <span>Pending Approvals</span>
-                                    <span>1</span>
+                                    <span>{pendingStatus}</span>
                                 </div>
                             </div>
 
