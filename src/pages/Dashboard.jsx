@@ -6,11 +6,11 @@ export default function Dashboard() {
     const navigate = useNavigate();
 
     const navToExpense = () => {
-        navigate("/expense");
+        navigate("/newExpense");
     };
 
     const navToTrip = () => {
-        navigate("/trips");
+        navigate("/newTrips");
     };
 
     const [pendingStatus, setPendingStatus] = useState(0);

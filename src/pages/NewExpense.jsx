@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
 import { useState } from "react";
+import { storage } from "../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function NewExpense() {
     const navigate = useNavigate();
@@ -16,6 +18,11 @@ export default function NewExpense() {
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
     const [employee, setEmployee] = useState('');
+    const [invoiceFile, setInvoiceFile] = useState(null);
+
+    const handleFileChange = (e) => {
+        setInvoiceFile(e.target.files[0]);
+    }
 
     const handleSubmit = async () => {
         const obj = {
@@ -25,10 +32,24 @@ export default function NewExpense() {
             amount,
             category,
             description,
-            employee
+            employee,
         };
 
         console.log(obj);
+
+        // Upload file to Firebase storage
+        if (invoiceFile) {
+            const fileRef = ref(storage, `invoice/${invoiceFile.name}`);
+            await uploadBytes(fileRef, invoiceFile);
+            console.log('Invoice uploaded successfully');
+
+            //Get the download URL
+            const downloadUrl = await getDownloadURL(fileRef);
+            console.log(downloadUrl);
+
+            //Send expense data with the download URL to your backend
+            obj.invoiceUrl = downloadUrl;
+        }
 
         try {
             const response = await fetch('https://backend-2txi.vercel.app/expenses', {
@@ -118,7 +139,7 @@ export default function NewExpense() {
                     </div>
 
                     <label style={{ width: "45%", border: "1px solid black", display: "flex", justifyContent: "center", alignItems: "center" }} htmlFor="file-upload">
-                        <input type="file" id="file-upload" style={{ display: 'none' }} />
+                        <input type="file" id="file-upload" style={{ display: 'none' }} onChange={handleFileChange}/>
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
                             <i className="bi bi-plus"></i>
                             <p>Upload an invoice</p>
