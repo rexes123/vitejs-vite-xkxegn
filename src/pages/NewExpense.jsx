@@ -12,7 +12,7 @@ export default function NewExpense() {
     const [subject, setSubject] = useState('');
     const [merchant, setMerchant] = useState('');
     const [date, setDate] = useState('');
-    const [total, setTotal] = useState('');
+    const [amount, setAmount] = useState('');
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
     const [employee, setEmployee] = useState('');
@@ -22,7 +22,7 @@ export default function NewExpense() {
             subject,
             merchant,
             date,
-            total,
+            amount,
             category,
             description,
             employee
@@ -86,7 +86,7 @@ export default function NewExpense() {
                         <div className="mb-3 row">
                             <label className="col-sm-2 col-form-label">Total*</label>
                             <div className="col-sm-10">
-                                <input type="number" className="form-control" onChange={(e) => setTotal(e.target.value)} />
+                                <input type="number" className="form-control" onChange={(e) => setAmount(e.target.value)} />
                             </div>
                         </div>
 
