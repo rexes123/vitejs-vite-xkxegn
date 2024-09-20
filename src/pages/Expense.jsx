@@ -102,6 +102,8 @@ export default function Expense() {
                                     <td>{expense.subject}</td>
                                     <td>{expense.merchant}</td>
                                     <td>{expense.date}</td>
+                                    <td>{expense.amount}</td>
+                                    <td>{expense.status}</td>
                                 </tr>
                             ))
                         }
