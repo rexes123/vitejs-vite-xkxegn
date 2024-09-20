@@ -5,14 +5,20 @@ import { AuthContext } from "../components/AuthProvider";
 
 export default function Approvals() {
     const navigate = useNavigate();
-    const { user } = useContext(AuthContext); // Get user from context
+    const { user } = useContext(AuthContext);
     const [data, setData] = useState([]);
-    console.log(data);
     const [selectedTrips, setSelectedTrips] = useState(new Set());
-    const [userRole, setUserRole] = useState('user'); // Default role
+    const [userRole, setUserRole] = useState('user');
+    const [selectedImage, setSelectImage] = useState(null);
+    const [showImageModal, setShowImageModal] = useState(false);
 
     const navToNewTrip = () => {
         navigate("/newTrips");
+    };
+
+    const handleViewImage = (imageUrl) => {
+        setSelectImage(imageUrl);
+        setShowImageModal(true);
     };
 
     useEffect(() => {
@@ -25,8 +31,6 @@ export default function Approvals() {
                 
                 const expensesData = await expensesResponse.json();
                 const tripsData = await tripsResponse.json();
-
-                // Combine data
                 const combinedData = [...expensesData, ...tripsData];
 
                 setData(combinedData);
@@ -37,7 +41,6 @@ export default function Approvals() {
         getData();
     }, []);
 
-    // Set user role based on the logged-in user's email
     useEffect(() => {
         if (user && user.email === 'admin@gmail.com') {
             setUserRole('admin');
@@ -56,31 +59,6 @@ export default function Approvals() {
         setSelectedTrips(updatedSelection);
     };
 
-    //Handle select change for admin 
-    const handleStatusChange = async (id, newStatus) => {
-        console.log(`Updating status fro trip ID: ${id} to ${newStatus}`);
-        // Update status in the backend
-        const response = await fetch(`https://backend-2txi.vercel.app/trips/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ status: newStatus }), // Send only the status
-        });
-    
-        if (response.ok) {
-            const updatedTrip = await response.json(); // Get the updated trip
-            setData(prevData => 
-                prevData.map(trip => 
-                    trip.id === id ? updatedTrip : trip
-                )
-            );
-        } else {
-            alert('Failed to update status.'); // Error handling
-        }
-    };
-    
-
     const handleDeleteSelected = async () => {
         const idsToDelete = Array.from(selectedTrips);
         if (idsToDelete.length === 0) {
@@ -95,7 +73,7 @@ export default function Approvals() {
         ));
 
         setData(prevData => prevData.filter(trip => !idsToDelete.includes(trip.id)));
-        setSelectedTrips(new Set()); // Clear selected trips
+        setSelectedTrips(new Set());
     };
 
     return (
@@ -103,8 +81,6 @@ export default function Approvals() {
             <Nav />
             <div style={{ width: "100%" }}>
                 <button onClick={navToNewTrip} type="button" className="btn btn-success">+ New trip</button>
-
-                {/* Conditionally render the Delete button */}
                 {selectedTrips.size > 0 && (
                     <button onClick={handleDeleteSelected} type="button" className="btn btn-danger">Delete Selected</button>
                 )}
@@ -112,7 +88,7 @@ export default function Approvals() {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th scope="col"><input type="checkbox"/></th>
+                            <th scope="col"><input type="checkbox" /></th>
                             <th scope="col">Name</th>
                             <th scope="col">CATEGORY</th>
                             <th scope="col">AMOUNT</th>
@@ -122,39 +98,54 @@ export default function Approvals() {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((trips) => (
-                            <tr key={trips.id}>
+                        {data.map((trip) => (
+                            <tr key={trip.id}>
                                 <th scope="row">
                                     <input
                                         type="checkbox"
-                                        checked={selectedTrips.has(trips.id)}
-                                        onChange={() => handleCheckboxChange(trips.id)}
+                                        checked={selectedTrips.has(trip.id)}
+                                        onChange={() => handleCheckboxChange(trip.id)}
                                     />
                                 </th>
-                                <td>{trips.name}</td>
-                                <td>{trips.category}</td>
-                                <td>{trips.amount}</td>
-                                <td>{trips.create_at}</td>
-                                <td><i class="bi bi-eye"></i></td>
-                                
-                                {/* Conditionally render based on user role */}
+                                <td>{trip.name}</td>
+                                <td>{trip.category}</td>
+                                <td>{trip.amount}</td>
+                                <td>{trip.create_at}</td>
+                                <td>
+                                    {/* {trip.invoiceUrl && (
+                                        <i className="bi bi-eye" onClick={() => handleViewImage(trip.invoiceUrl)} style={{ cursor: 'pointer' }}>asda</i>
+                                    )} */}
+                                    <i className="bi bi-eye"  onClick={() => handleViewImage(trip.invoiceUrl)} style={{ cursor: 'pointer' }}></i>
+                                </td>
+
                                 {userRole === 'admin' ? (
-                                    <select 
-                                    className="form-select" 
-                                    value={trips.status} // Set current status as the value
-                                    onChange={(e)=> handleStatusChange(trips.id, e.target.value)} //Handle change
-                                    >
-                                        <option value="approved">Approved</option>
-                                        <option value="rejected">Rejected</option>
-                                        <option value="pending">Pending</option>
-                                    </select>
+                                    <td>
+                                        <select 
+                                            className="form-select" 
+                                            value={trip.status}
+                                            onChange={(e) => handleStatusChange(trip.id, e.target.value)}
+                                        >
+                                            <option value="approved">Approved</option>
+                                            <option value="rejected">Rejected</option>
+                                            <option value="pending">Pending</option>
+                                        </select>
+                                    </td>
                                 ) : (
-                                    <td>{trips.status}</td>
+                                    <td>{trip.status}</td>
                                 )}
                             </tr>
                         ))}
                     </tbody>
                 </table>
+
+                {showImageModal && (
+                    <div className="modal">
+                        <div className="modal-content">
+                            <span className="close" onClick={() => setShowImageModal(false)}>&times;</span>
+                            <img src={selectedImage} alt="Invoice" style={{ width: '100%' }} />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
