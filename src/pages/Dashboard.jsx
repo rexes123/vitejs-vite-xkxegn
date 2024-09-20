@@ -20,28 +20,18 @@ export default function Dashboard() {
     const [data, setData] = useState([])
     console.log(data);
 
-    const [trips, setTrips] = useState(null);
-
-
-
+    
+    
+    
     useEffect(()=>{
         data.forEach(()=>{
             const pending= data.filter(item => item.status === 'pending');
             setPendingStatus(pending.length);
         }, [data])
     })
-
-
-    useEffect(()=>{
-        const getTrips = async()=>{
-            const endpoint = 'https://backend-2txi.vercel.app/trips'
-            const response = await fetch(endpoint);
-            const data = await response.json();
-            console.log(data);
-        }
-        getTrips()
-    }, [])    
-
+    
+    const [expenses, setExpense] = useState(0);
+    const [trips, setTrips] = useState(0);
 
     useEffect(() => {
         const getData = async () => {
@@ -52,10 +42,11 @@ export default function Dashboard() {
                 ]);
                 
                 const expensesData = await expensesResponse.json();
-                console.log(expensesData);
+                setExpense(expensesData.length)
+                console.log(expensesData.length);
                 const tripsData = await tripsResponse.json();
-                setTrips(tripsData)
-                console.log(tripsData);
+                setTrips(tripsData.length)
+                console.log(tripsData.length);
 
                 // Combine data
                 const combinedData = [...expensesData, ...tripsData];
@@ -91,7 +82,7 @@ export default function Dashboard() {
                                 <i class="bi bi-airplane"></i>
                                 <div class="pending-info">
                                     <span>New Trips Registered </span>
-                                    <span>1</span>
+                                    <span>{trips}</span>
                                 </div>
                             </div>
 
@@ -107,7 +98,7 @@ export default function Dashboard() {
                                 <i class="bi bi-cart-plus"></i>
                                 <div class="pending-info">
                                     <span>Upcoming Expenses</span>
-                                    <span>1</span>
+                                    <span>{expenses}</span>
                                 </div>
                             </div>
 
@@ -133,6 +124,7 @@ export default function Dashboard() {
                                 </tr>
                             </thead>
                             <tbody>
+                                {/* Update the three most latest to here */}
                                 <tr>
                                     <th scope="row">1</th>
                                     <td>Mark</td>
