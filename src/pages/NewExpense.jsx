@@ -7,10 +7,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 export default function NewExpense() {
     const navigate = useNavigate();
 
-    const navToExpense = () => {
-        navigate('/expense');
-    };
-
+    // State variables for form inputs
     const [subject, setSubject] = useState('');
     const [merchant, setMerchant] = useState('');
     const [date, setDate] = useState('');
@@ -19,12 +16,28 @@ export default function NewExpense() {
     const [description, setDescription] = useState('');
     const [employee, setEmployee] = useState('');
     const [invoiceFile, setInvoiceFile] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleFileChange = (e) => {
         setInvoiceFile(e.target.files[0]);
-    }
+    };
+
+    const validateForm = () => {
+        // Simple validation for required fields
+        if (!subject || !merchant || !date || !amount || !category || !employee) {
+            setErrorMessage("Please fill in all required fields.");
+            return false;
+        }
+        if (amount <= 0) {
+            setErrorMessage("Amount must be greater than zero.");
+            return false;
+        }
+        return true;
+    };
 
     const handleSubmit = async () => {
+        if (!validateForm()) return;
+
         const obj = {
             subject,
             merchant,
@@ -35,19 +48,14 @@ export default function NewExpense() {
             employee,
         };
 
-        console.log(obj);
-
         // Upload file to Firebase storage
         if (invoiceFile) {
             const fileRef = ref(storage, `invoice/${invoiceFile.name}`);
             await uploadBytes(fileRef, invoiceFile);
             console.log('Invoice uploaded successfully');
 
-            //Get the download URL
+            // Get the download URL
             const downloadUrl = await getDownloadURL(fileRef);
-            console.log(downloadUrl);
-
-            //Send expense data with the download URL to your backend
             obj.invoiceUrl = downloadUrl;
         }
 
@@ -63,83 +71,65 @@ export default function NewExpense() {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Expense saved successfully:', data);
-                navToExpense();
+                navigate('/expense'); // Redirect after saving
             } else {
                 console.error('Error saving expense:', response.statusText);
+                setErrorMessage('Failed to save expense. Please try again.');
             }
         } catch (error) {
             console.error('Network error:', error);
+            setErrorMessage('Network error. Please try again later.');
         }
-
-        navigate('/expense')
     };
 
     return (
-        <div style={{ display: "flex" }} className="container">
+        <div className="container" style={{ display: "flex" }}>
             <Nav />
             <div className="container">
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <button type="button" className="btn-close" aria-label="Close" onClick={navToExpense}></button>
+                    <button type="button" className="btn-close" aria-label="Close" onClick={() => navigate('/expense')}></button>
                 </div>
+
+                {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <div style={{ width: "45%" }}>
-                        <div className="mb-3 row">
-                            <label className="col-sm-2 col-form-label">Subject</label>
-                            <div className="col-sm-10">
-                                <input type="text" className="form-control" onChange={(e) => setSubject(e.target.value)} />
+                        {/* Form fields */}
+                        {[
+                            { label: "Subject", value: subject, setter: setSubject },
+                            { label: "Merchant", value: merchant, setter: setMerchant },
+                            { label: "Date*", value: date, setter: setDate, type: "date" },
+                            { label: "Total*", value: amount, setter: setAmount, type: "number" },
+                            { label: "Category*", value: category, setter: setCategory, select: true, options: ["Select Type", "Trip", "Services", "Catering"] },
+                            { label: "Description", value: description, setter: setDescription },
+                            { label: "Employee*", value: employee, setter: setEmployee },
+                        ].map(({ label, value, setter, type, select, options }, index) => (
+                            <div className="mb-3 row" key={index}>
+                                <label className="col-sm-2 col-form-label">{label}</label>
+                                <div className="col-sm-10">
+                                    {select ? (
+                                        <select className="form-select" onChange={(e) => setter(e.target.value)}>
+                                            {options.map((option, idx) => (
+                                                <option key={idx} value={option === "Select Type" ? "" : option}>
+                                                    {option}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <input
+                                            type={type || "text"}
+                                            className="form-control"
+                                            value={value}
+                                            onChange={(e) => setter(e.target.value)}
+                                        />
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <div className="mb-3 row">
-                            <label className="col-sm-2 col-form-label">Merchant</label>
-                            <div className="col-sm-10">
-                                <input type="text" className="form-control" onChange={(e) => setMerchant(e.target.value)} />
-                            </div>
-                        </div>
-
-                        <div className="mb-3 row">
-                            <label className="col-sm-2 col-form-label">Date*</label>
-                            <div className="col-sm-10">
-                                <input type="date" className="form-control" onChange={(e) => setDate(e.target.value)} />
-                            </div>
-                        </div>
-
-                        <div className="mb-3 row">
-                            <label className="col-sm-2 col-form-label">Total*</label>
-                            <div className="col-sm-10">
-                                <input type="number" className="form-control" onChange={(e) => setAmount(e.target.value)} />
-                            </div>
-                        </div>
-
-                        <div className="mb-3 row">
-                            <label className="col-sm-2 col-form-label">Category*</label>
-                            <div className="col-sm-10">
-                                <select className="form-select" aria-label="Default select example" onChange={(e) => setCategory(e.target.value)}>
-                                    <option value="" disabled selected>Select Type</option>
-                                    <option value="trip">Trip</option>
-                                    <option value="services">Services</option>
-                                    <option value="catering">Catering</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="mb-3 row">
-                            <label className="col-sm-2 col-form-label">Description</label>
-                            <div className="col-sm-10">
-                                <input type="text" className="form-control" onChange={(e) => setDescription(e.target.value)} />
-                            </div>
-                        </div>
-
-                        <div className="mb-3 row">
-                            <label className="col-sm-2 col-form-label">Employee*</label>
-                            <div className="col-sm-10">
-                                <input type="text" className="form-control" onChange={(e) => setEmployee(e.target.value)} />
-                            </div>
-                        </div>
+                        ))}
                     </div>
 
                     <label style={{ width: "45%", border: "1px solid black", display: "flex", justifyContent: "center", alignItems: "center" }} htmlFor="file-upload">
-                        <input type="file" id="file-upload" style={{ display: 'none' }} onChange={handleFileChange}/>
+                        <input type="file" id="file-upload" style={{ display: 'none' }} onChange={handleFileChange} />
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
                             <i className="bi bi-plus"></i>
                             <p>Upload an invoice</p>
@@ -147,7 +137,7 @@ export default function NewExpense() {
                     </label>
                 </div>
 
-                <button onClick={handleSubmit}>Save</button>
+                <button onClick={handleSubmit} className="btn btn-primary">Save</button>
             </div>
         </div>
     );
