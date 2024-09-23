@@ -16,14 +16,15 @@ export default function NewExpense() {
     const [description, setDescription] = useState('');
     const [employee, setEmployee] = useState('');
     const [invoiceFile, setInvoiceFile] = useState(null);
+    const [invoiceUrl, setInvoiceUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [showModal, setShowModal] = useState(false); // New state for modal visibility
 
     const handleFileChange = (e) => {
         setInvoiceFile(e.target.files[0]);
     };
 
     const validateForm = () => {
-        // Simple validation for required fields
         if (!subject || !merchant || !date || !amount || !category || !employee) {
             setErrorMessage("Please fill in all required fields.");
             return false;
@@ -48,14 +49,13 @@ export default function NewExpense() {
             employee,
         };
 
-        // Upload file to Firebase storage
         if (invoiceFile) {
             const fileRef = ref(storage, `invoice/${invoiceFile.name}`);
             await uploadBytes(fileRef, invoiceFile);
             console.log('Invoice uploaded successfully');
 
-            // Get the download URL
             const downloadUrl = await getDownloadURL(fileRef);
+            setInvoiceUrl(downloadUrl);
             obj.invoiceUrl = downloadUrl;
         }
 
@@ -71,7 +71,7 @@ export default function NewExpense() {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Expense saved successfully:', data);
-                navigate('/expense'); // Redirect after saving
+                navigate('/expense');
             } else {
                 console.error('Error saving expense:', response.statusText);
                 setErrorMessage('Failed to save expense. Please try again.');
@@ -137,7 +137,39 @@ export default function NewExpense() {
                     </label>
                 </div>
 
+                {invoiceUrl && (
+                    <div style={{ marginTop: '20px' }}>
+                        <h5>Uploaded Invoice:</h5>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <img src={invoiceUrl} alt="Uploaded Invoice" style={{ maxWidth: '100%', border: '1px solid black', marginRight: '10px' }} />
+                            <button onClick={() => setShowModal(true)} className="btn btn-link">
+                                <i className="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 <button onClick={handleSubmit} className="btn btn-primary">Save</button>
+
+                {/* Modal for image preview */}
+                {showModal && (
+                    <div className="modal" style={{ display: 'block', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 1050 }}>
+                        <div className="modal-dialog" style={{ margin: '10% auto', maxWidth: '600px' }}>
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Invoice Preview</h5>
+                                    <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                                </div>
+                                <div className="modal-body">
+                                    <img src={invoiceUrl} alt="Uploaded Invoice" style={{ maxWidth: '100%' }} />
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

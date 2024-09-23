@@ -17,10 +17,13 @@ export default function Approvals() {
         navigate("/newTrips");
     };
 
-    const handleViewImage = (imageUrl) => {
-        setSelectImage(imageUrl);
-        setShowImageModal(true);
-    };
+    // const handleViewImage = (imageUrl) => {
+    //     setSelectImage(imageUrl);
+    //     setShowImageModal(true);
+    // };
+
+    console.log(selectedImage);
+    console.log(showImageModal);
 
     useEffect(() => {
         const getData = async () => {
@@ -29,7 +32,7 @@ export default function Approvals() {
                     fetch('https://backend-2txi.vercel.app/expenses'),
                     fetch('https://backend-2txi.vercel.app/trips')
                 ]);
-                
+
                 const expensesData = await expensesResponse.json();
                 const tripsData = await tripsResponse.json();
                 const combinedData = [...expensesData, ...tripsData];
@@ -100,6 +103,7 @@ export default function Approvals() {
                     </thead>
                     <tbody>
                         {data.map((trip) => (
+                            // Ensure trip.id is unique
                             <tr key={trip.id}>
                                 <th scope="row">
                                     <input
@@ -113,16 +117,17 @@ export default function Approvals() {
                                 <td>{trip.amount}</td>
                                 <td>{trip.create_at}</td>
                                 <td>
-                                        {/* {trip.invoiceUrl && ( */}
-                                            <i className="bi bi-eye"  onClick={() => handleViewImage(trip.invoiceUrl)} style={{ cursor: 'pointer' }}></i>
-                                        {/* )} */}
+                                    <i className="bi bi-eye" style={{ cursor: 'pointer' }}></i>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        Launch demo modal
+                                    </button>
                                 </td>
                                 <td>{trip.invoiceUrl}</td>
 
                                 {userRole === 'admin' ? (
                                     <td>
-                                        <select 
-                                            className="form-select" 
+                                        <select
+                                            className="form-select"
                                             value={trip.status}
                                             onChange={(e) => handleStatusChange(trip.id, e.target.value)}
                                         >
@@ -140,7 +145,7 @@ export default function Approvals() {
                 </table>
 
                 {showImageModal && (
-                    <div className="modal">
+                    <div className="modal" style={modalStyle}>
                         <div className="modal-content">
                             <span className="close" onClick={() => setShowImageModal(false)}>&times;</span>
                             <img src={selectedImage} alt="Invoice" style={{ width: '100%' }} />
