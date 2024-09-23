@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../components/AuthProvider";
+import { Button, Modal } from "react-bootstrap";
 
 export default function Approvals() {
     const navigate = useNavigate();
@@ -10,20 +11,18 @@ export default function Approvals() {
     console.log(data);
     const [selectedTrips, setSelectedTrips] = useState(new Set());
     const [userRole, setUserRole] = useState('user');
+    //Used to hold the url of image that want to display
     const [selectedImage, setSelectImage] = useState(null);
+    console.log(selectedImage);
     const [showImageModal, setShowImageModal] = useState(false);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const navToNewTrip = () => {
         navigate("/newTrips");
     };
-
-    // const handleViewImage = (imageUrl) => {
-    //     setSelectImage(imageUrl);
-    //     setShowImageModal(true);
-    // };
-
-    console.log(selectedImage);
-    console.log(showImageModal);
 
     useEffect(() => {
         const getData = async () => {
@@ -80,6 +79,12 @@ export default function Approvals() {
         setSelectedTrips(new Set());
     };
 
+    const handleViewImage = (imageUrl) => {
+        console.log(imageUrl);
+        setSelectImage(imageUrl);
+        setShowImageModal(true);
+    };
+
     return (
         <div className="container" style={{ display: "flex" }}>
             <Nav />
@@ -103,7 +108,6 @@ export default function Approvals() {
                     </thead>
                     <tbody>
                         {data.map((trip) => (
-                            // Ensure trip.id is unique
                             <tr key={trip.id}>
                                 <th scope="row">
                                     <input
@@ -116,13 +120,8 @@ export default function Approvals() {
                                 <td>{trip.category}</td>
                                 <td>{trip.amount}</td>
                                 <td>{trip.create_at}</td>
-                                <td>
-                                    <i className="bi bi-eye" style={{ cursor: 'pointer' }}></i>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                        Launch demo modal
-                                    </button>
-                                </td>
-                                <td>{trip.invoiceUrl}</td>
+                                <img src={trip.invoiceurl} style={{ height: "100px", width: "100px" }} alt="Invoice" />
+
 
                                 {userRole === 'admin' ? (
                                     <td>
@@ -145,10 +144,20 @@ export default function Approvals() {
                 </table>
 
                 {showImageModal && (
-                    <div className="modal" style={modalStyle}>
-                        <div className="modal-content">
-                            <span className="close" onClick={() => setShowImageModal(false)}>&times;</span>
-                            <img src={selectedImage} alt="Invoice" style={{ width: '100%' }} />
+                    <div className="modal fade show" style={{ display: 'block' }} onClick={() => setShowImageModal(false)}>
+                        <div className="modal-dialog">
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Invoice</h5>
+                                    <button type="button" className="btn-close" onClick={() => setShowImageModal(false)} />
+                                </div>
+                                <div className="modal-body">
+                                    <img src={selectedImage} alt="Invoice" style={{ width: '100%' }} />
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={() => setShowImageModal(false)}>Close</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}

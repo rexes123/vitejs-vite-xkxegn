@@ -20,6 +20,7 @@ export default function NewExpense() {
     const [errorMessage, setErrorMessage] = useState('');
     const [showModal, setShowModal] = useState(false); // New state for modal visibility
 
+
     const handleFileChange = (e) => {
         setInvoiceFile(e.target.files[0]);
     };
@@ -56,6 +57,7 @@ export default function NewExpense() {
 
             const downloadUrl = await getDownloadURL(fileRef);
             setInvoiceUrl(downloadUrl);
+            //This is what you will send to your backend
             obj.invoiceUrl = downloadUrl;
         }
 
