@@ -2,7 +2,6 @@ import { useState, useContext, useEffect } from "react"
 import Dashboard from "../pages/Dashboard"
 import Expense from "../pages/Expense"
 import { NavLink } from "react-router-dom";
-import { Image, Col } from 'react-bootstrap';
 import { AuthContext } from "./AuthProvider";
 import { Timestamp, doc, getDoc, setDoc, collection, orderBy, query, limit, getDocs } from "firebase/firestore";
 import { db, storage } from "../firebase";
@@ -165,20 +164,8 @@ export default function Nav() {
             onClick={() => fileUrl && window.open(fileUrl, '_blank')}
           />
         )}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          id="fileInput"
-        />
-
-        {
-          uploading && (
-            <div className="spinner-border" role="status" style={{ margin: '20px auto', display: 'block' }}>
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          )
-        }
+       
+      
 
 
         {userData ? (
@@ -192,12 +179,12 @@ export default function Nav() {
         ) : (
           <p>No user data available</p>
           )}
-          <div style={{position: "relative"}}>
-          <NavLink to="/" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')} role="tab"><i class="bi bi-house navBar__icon"></i> Home</NavLink>
-          <NavLink to="/expense" className={`nav-link ${activeTab === 'expenses' ? 'active' : ''}`} onClick={() => setActiveTab('expenses')} role="tab"><i className="bi bi-cart-plus navBar__icon"/>Expenses</NavLink>
-          <NavLink to="/trips" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab"><i class="bi bi-airplane navBar__icon" />Trip</NavLink>
-          <NavLink to="/approvals" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab"><img src=""/>Approvals</NavLink>
-          <NavLink to="/settings" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab" class="nav-link"><i class="bi bi-gear navBar__icon"></i>Settings</NavLink>
+          <div style={{position: "relative", display:"flex", flexDirection: "column"}}>
+          <NavLink to="/" onClick={() => setActiveTab('home')} role="tab"><i class="bi bi-house navBar__icon"></i> Home</NavLink>
+          <NavLink to="/expense"  onClick={() => setActiveTab('expenses')} role="tab"><i className="bi bi-cart-plus navBar__icon"/>Expenses</NavLink>
+          <NavLink to="/trips"  role="tab"><i class="bi bi-airplane navBar__icon" />Trip</NavLink>
+          <NavLink to="/approvals"  role="tab"><img src=""/>Approvals</NavLink>
+          <NavLink to="/settings"  role="tab" class="nav-link"><i class="bi bi-gear navBar__icon"></i>Settings</NavLink>
         </div>
         <NavLink onClick={handleLogout} style={{position: "absolute", bottom: 0, textDecoration: "none"}}><i class="bi bi-door-closed navBar__icon"></i>Log out </NavLink>
       </div>
