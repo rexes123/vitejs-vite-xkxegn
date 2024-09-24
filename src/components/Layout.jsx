@@ -8,7 +8,7 @@ import { NavLink } from "react-router-dom";
 export default function Layout() {
     return (
         <div className="container" >
-            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">Toggle top offcanvas</button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop"><i class="bi bi-list"></i></button>
 
             <div class="offcanvas offcanvas-top container" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
                 <div class="offcanvas-header">
