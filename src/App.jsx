@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import { AuthProvider } from './components/AuthProvider';
 import Approvals from './pages/Approvals';
+import Settings from './pages/Settings';
 
 export default function App() {
 
@@ -24,6 +25,7 @@ export default function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/approvals' element={<Approvals/>}/>
+            <Route path='/settings' element={<Settings/>}/>
           </Routes>
         </BrowserRouter>
       </AuthProvider>

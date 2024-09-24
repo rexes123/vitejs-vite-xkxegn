@@ -23,27 +23,29 @@ export default function Nav() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   console.log(file)
-  const [loading ,setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+  const [loadingImage, setLoadingImage] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if(user){
+      if (user) {
         try {
           const uid = user.uid;
           const userDoc = doc(db, 'users', uid);
           const docSnap = await getDoc(userDoc);
-  
-          if (docSnap.exists()){
+
+          if (docSnap.exists()) {
             setUserData(docSnap.data());
-          } else{
+          } else {
             console.log('No such document!');
           }
         } catch (error) {
           console.error(error);
-        } finally{
+        } finally {
           setLoading(false);
         }
-      } else{
+      } else {
         console.log('No user is signed in');
         setLoading(false); //Set loading to false if no user is signed in
       }
@@ -53,14 +55,14 @@ export default function Nav() {
 
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
-    if(!selectedFile) return;
+    if (!selectedFile) return;
 
     console.log(selectedFile);
     setFile(selectedFile);
     setUploading(true);
 
-    try{
-      if(selectedFile && user){
+    try {
+      if (selectedFile && user) {
         //Create a reference to the storage location
         const imageRef = ref(storage, `post/${selectedFile.name}`);
 
@@ -75,7 +77,7 @@ export default function Nav() {
         const newPostRef = doc(postsRef);
 
         //Add the file URL to the new document
-        await setDoc(newPostRef, { fileUrl: newFileUrl, timestamp: Timestamp.now()});
+        await setDoc(newPostRef, { fileUrl: newFileUrl, timestamp: Timestamp.now() });
 
         //Update the local state to reflect the image URL
         setFileUrl(newFileUrl);
@@ -83,40 +85,44 @@ export default function Nav() {
         //Create a reference to the user's posts subcollection
         // const postsRef = collection(db, `users/${user.uid}/posts`);
         // const newPostsRef = doc(postsRef);
-      } else{
+      } else {
         console.log('No user is signed in');
       }
-    } catch(e){
+    } catch (e) {
       console.error('Error uploading file:', e);
-    } finally{
+    } finally {
       setUploading(false);
     }
   }
 
-  useEffect(()=>{
-    const fetchProfileImage = async()=>{
-      if(user){
-        try{
-          //Reference to user's posts subcollection
-          const postRef = collection(db, `users/${user.uid}/posts`);
-  
-          //Query to get latest post
-          const q = query(postRef, orderBy("timestamp", "desc"), limit(1));
-          const querySnapShot = await getDocs(q);
-  
-          if (!querySnapShot.empty){
-            const latestPostDoc = querySnapShot.docs[0];
-            const latestPostData = latestPostDoc.data();
-            setFileUrl(latestPostData.fileUrl || '');
-          }
-        } catch(e){
-          console.error('Error fetching document:', e)
-        }
-      };
-    }
+   useEffect(()=>{
+  const fetchProfileImage = async () => {
+    if (user) {
+      // Start loading when fetching
+      setLoadingImage(true);
+      try {
+        //Reference to user's posts subcollection
+        const postRef = collection(db, `users/${user.uid}/posts`);
 
-    fetchProfileImage()
-  }, [user])
+        //Query to get latest post
+        const q = query(postRef, orderBy("timestamp", "desc"), limit(1));
+        const querySnapShot = await getDocs(q);
+
+        if (!querySnapShot.empty) {
+          const latestPostDoc = querySnapShot.docs[0];
+          const latestPostData = latestPostDoc.data();
+          setFileUrl(latestPostData.fileUrl || '');
+        }
+      } catch (e) {
+        console.error('Error fetching document:', e)
+      } finally{
+        setLoadingImage(false);
+      }
+    };
+  }
+
+  fetchProfileImage()
+   }, [user])
 
 
   const [activeTab, setActiveTab] = useState('');
@@ -147,13 +153,19 @@ export default function Nav() {
     <div class="d-flex align-items-start">
 
       <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-      <img
+        {loadingImage ? (
+          <div>
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        ) : (
+          <img
             src={fileUrl || 'https://www.kindpng.com/picc/m/451-4517876_default-profile-hd-png-download.png'} // Use a default image if no profile picture is uploaded
             alt="Profile"
             style={{ width: '100px', height: '100px', borderRadius: '50%', cursor: 'pointer' }}
             onClick={() => fileUrl && window.open(fileUrl, '_blank')}
-          />        
-          <input
+          />
+        )}
+        <input
           type="file"
           accept="image/*"
           onChange={handleFileChange}
@@ -163,8 +175,8 @@ export default function Nav() {
         {
           uploading && (
             <div className="spinner-border" role="status" style={{ margin: '20px auto', display: 'block' }}>
-            <span className="visually-hidden">Loading...</span>
-          </div>
+              <span className="visually-hidden">Loading...</span>
+            </div>
           )
         }
 
@@ -179,13 +191,15 @@ export default function Nav() {
           </div>
         ) : (
           <p>No user data available</p>
-        )}
-        <NavLink to="/" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')} role="tab">Home</NavLink>
-        <NavLink to="/expense" className={`nav-link ${activeTab === 'expenses' ? 'active' : ''}`} onClick={() => setActiveTab('expenses')} role="tab">Expenses</NavLink>
-        <NavLink to="/trips" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab">Trip</NavLink>
-        <NavLink to="/approvals" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab">Approvals</NavLink>
-        <NavLink class="nav-link" role="tab">Settings</NavLink>
-        <NavLink onClick={handleLogout}>Log out</NavLink>
+          )}
+          <div style={{position: "relative"}}>
+          <NavLink to="/" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')} role="tab"><i class="bi bi-house"></i> Home</NavLink>
+          <NavLink to="/expense" className={`nav-link ${activeTab === 'expenses' ? 'active' : ''}`} onClick={() => setActiveTab('expenses')} role="tab">Expenses</NavLink>
+          <NavLink to="/trips" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab"><i class="bi bi-airplane" i/>Trip</NavLink>
+          <NavLink to="/approvals" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab">Approvals</NavLink>
+          <NavLink to="/settings" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab" class="nav-link"><i class="bi bi-gear"></i>Settings</NavLink>
+        </div>
+        <NavLink onClick={handleLogout} style={{position: "absolute", bottom: 0, textDecoration: "none"}}><i class="bi bi-door-closed"></i>Log out </NavLink>
       </div>
       <div class="tab-content" id="v-pills-tabContent">
         {renderContent}

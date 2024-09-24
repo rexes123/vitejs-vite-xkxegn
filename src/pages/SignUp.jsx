@@ -69,6 +69,10 @@ export default function SignUp() {
         }
     }
 
+    const navToLogin = ()=>{
+        navigate('/login')
+    }
+
 
     return (
         <div className='container'>
@@ -90,7 +94,8 @@ export default function SignUp() {
                     <Form.Control type="password" onChange={handleConfirmPasword} value={confirmPassword} />
                 </Form.Group>
             </Form>
-            <button onClick={handleAdd}>Sign Up</button>
+            <button onClick={handleAdd} class="btn btn-primary" style={{marginRight: "10px"}}>Sign Up</button>
+            <button onClick={navToLogin} class="btn btn-secondary">Log in</button>
         </div>
     )
 }

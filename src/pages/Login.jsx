@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
+import SignUp from './SignUp';
 
 export default function Login() {
 
@@ -57,6 +58,11 @@ export default function Login() {
         }
     }
 
+    const navSignUp = () =>{
+        console.log('Sign Up')
+        navigate('/signup')
+    }
+
 
     return (
         <div className='container'>
@@ -71,7 +77,8 @@ export default function Login() {
                 </Form.Group>
             </Form>
 
-            <button onClick={handleLogin}>Login</button>
+            <button onClick={handleLogin} class="btn btn-primary" style={{marginRight: "10px"}}>Login</button>
+            <button class="btn btn-secondary" onClick={navSignUp}>Sign up</button>
         </div>
     )
 }

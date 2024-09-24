@@ -16,6 +16,18 @@ export default function Approvals() {
     console.log(selectedImage);
     const [showImageModal, setShowImageModal] = useState(false);
     const [show, setShow] = useState(false);
+    //Track if all trips are selected
+    const [selectAll, setSelectAll] = useState(false);
+
+    const handleSelectAllChange = () => {
+        if (selectAll) {
+            setSelectedTrips(new Set()); //Deselect all
+        } else {
+            const addIds = new Set(data.map(trip => trip.id));
+            setSelectedTrips(allIds); //Select all
+        }
+        setSelectAll(!selectAll); // Toggle selectAll state
+    }
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -52,7 +64,7 @@ export default function Approvals() {
         }
     }, [user]);
 
-    const handleCheckboxChange = (id) => {
+    const handleCheckBoxChange = (id) => {
         const updatedSelection = new Set(selectedTrips);
         if (updatedSelection.has(id)) {
             updatedSelection.delete(id);
@@ -60,6 +72,7 @@ export default function Approvals() {
             updatedSelection.add(id);
         }
         setSelectedTrips(updatedSelection);
+        setSelectAll(updatedSelection.size === data.length); //Update selectAll based on selection
     };
 
     const handleDeleteSelected = async () => {
@@ -85,6 +98,30 @@ export default function Approvals() {
         setShowImageModal(true);
     };
 
+    const handleStatusChange = async (id, newStatus) => {
+        try {
+            const response = await fetch(`https://backend-2txi.vercel.app/trips/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update status');
+            }
+
+            setData(prevData =>
+                prevData.map(trip =>
+                    trip.id === id ? { ...trip, status: newStatus } : trip
+                )
+            );
+        } catch (error) {
+            console.error('Error updating status:', error);
+        }
+    };
+
     return (
         <div className="container" style={{ display: "flex" }}>
             <Nav />
@@ -97,7 +134,13 @@ export default function Approvals() {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th scope="col"><input type="checkbox" /></th>
+                            <th scope="col">
+                                <input
+                                    type="checkbox"
+                                    checked={selectAll}
+                                    onChange={handleSelectAllChange}
+                                />
+                            </th>
                             <th scope="col">Name</th>
                             <th scope="col">CATEGORY</th>
                             <th scope="col">AMOUNT</th>
@@ -113,7 +156,7 @@ export default function Approvals() {
                                     <input
                                         type="checkbox"
                                         checked={selectedTrips.has(trip.id)}
-                                        onChange={() => handleCheckboxChange(trip.id)}
+                                        onChange={() => handleCheckBoxChange(trip.id)}
                                     />
                                 </th>
                                 <td>{trip.name}</td>
