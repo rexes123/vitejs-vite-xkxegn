@@ -1,6 +1,7 @@
 import Nav from "../components/Nav";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Offcanvas from "./Offcanvas";
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -47,9 +48,6 @@ export default function Dashboard() {
     }, []);
 
     return (
-        <div className="container" style={{ display: "flex" }}>
-            <Nav />
-
             <div className="container">
                 <div className="row">
                     <div className="card col-sm-5">
@@ -152,6 +150,5 @@ export default function Dashboard() {
                     <div className="card col-sm-6">col-sm-6</div>
                 </div>
             </div>
-        </div>
     );
 }

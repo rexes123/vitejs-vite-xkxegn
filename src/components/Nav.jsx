@@ -150,7 +150,7 @@ export default function Nav() {
 
 
   return (
-    <div class="d-flex align-items-start">
+    <div class="d-flex align-items-start" id="navBar">
 
       <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
         {loadingImage ? (
@@ -193,13 +193,13 @@ export default function Nav() {
           <p>No user data available</p>
           )}
           <div style={{position: "relative"}}>
-          <NavLink to="/" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')} role="tab"><i class="bi bi-house"></i> Home</NavLink>
-          <NavLink to="/expense" className={`nav-link ${activeTab === 'expenses' ? 'active' : ''}`} onClick={() => setActiveTab('expenses')} role="tab">Expenses</NavLink>
-          <NavLink to="/trips" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab"><i class="bi bi-airplane" i/>Trip</NavLink>
-          <NavLink to="/approvals" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab">Approvals</NavLink>
-          <NavLink to="/settings" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab" class="nav-link"><i class="bi bi-gear"></i>Settings</NavLink>
+          <NavLink to="/" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')} role="tab"><i class="bi bi-house navBar__icon"></i> Home</NavLink>
+          <NavLink to="/expense" className={`nav-link ${activeTab === 'expenses' ? 'active' : ''}`} onClick={() => setActiveTab('expenses')} role="tab"><i className="bi bi-cart-plus navBar__icon"/>Expenses</NavLink>
+          <NavLink to="/trips" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab"><i class="bi bi-airplane navBar__icon" />Trip</NavLink>
+          <NavLink to="/approvals" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab"><img src=""/>Approvals</NavLink>
+          <NavLink to="/settings" className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} role="tab" class="nav-link"><i class="bi bi-gear navBar__icon"></i>Settings</NavLink>
         </div>
-        <NavLink onClick={handleLogout} style={{position: "absolute", bottom: 0, textDecoration: "none"}}><i class="bi bi-door-closed"></i>Log out </NavLink>
+        <NavLink onClick={handleLogout} style={{position: "absolute", bottom: 0, textDecoration: "none"}}><i class="bi bi-door-closed navBar__icon"></i>Log out </NavLink>
       </div>
       <div class="tab-content" id="v-pills-tabContent">
         {renderContent}

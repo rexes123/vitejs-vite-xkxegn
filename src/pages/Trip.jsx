@@ -70,7 +70,6 @@ export default function Trip() {
 
     return (
         <div className="container" style={{ display: "flex" }}>
-            <Nav />
             <div style={{ width: "100%" }}>
                 <button onClick={navToNewTrip} type="button" class="btn btn-success">+ New trip</button>
 

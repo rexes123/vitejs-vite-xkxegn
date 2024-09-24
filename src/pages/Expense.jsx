@@ -62,7 +62,6 @@ export default function Expense() {
 
     return (
         <div className="container" style={{ display: "flex" }}>
-            <Nav />
             <div style={{ width: "100%" }}>
                 <button onClick={handleAdd} type="button" class="btn btn-success" style={{marginRight: "10px"}}>+ New expense</button>
 
