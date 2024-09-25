@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react"
+import { useState, useContext, useEffect, useRef } from "react"
 import Dashboard from "../pages/Dashboard"
 import Expense from "../pages/Expense"
 import { NavLink } from "react-router-dom";
@@ -8,6 +8,7 @@ import { db, storage } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+
 
 
 export default function Nav() {
@@ -147,6 +148,15 @@ export default function Nav() {
     }
   }
 
+  const offCanvasRef = useRef(null);
+
+  const closeOffCanvas = ()=>{
+    const offCanvas = bootstrap.Offcanvas.getInstance(offCanvasRef.current);
+    if(offCanvas){
+      offCanvas.hide();
+    }
+  };
+
 
   return (
     <div class="d-flex align-items-start" id="navBar">
@@ -180,10 +190,10 @@ export default function Nav() {
           <p>No user data available</p>
           )}
           <div style={{position: "relative", display:"flex", flexDirection: "column"}}>
-          <NavLink to="/" onClick={() => setActiveTab('home')} role="tab"><i class="bi bi-house navBar__icon"></i> Home</NavLink>
-          <NavLink to="/expense"  onClick={() => setActiveTab('expenses')} role="tab"><i className="bi bi-cart-plus navBar__icon"/>Expenses</NavLink>
+          <NavLink to="/" role="tab"><i class="bi bi-house navBar__icon"></i> Home</NavLink>
+          <NavLink to="/expense"  role="tab"><i className="bi bi-cart-plus navBar__icon"/>Expenses</NavLink>
           <NavLink to="/trips"  role="tab"><i class="bi bi-airplane navBar__icon" />Trip</NavLink>
-          <NavLink to="/approvals"  role="tab"><img src=""/>Approvals</NavLink>
+          <NavLink to="/approvals"  role="tab"><img src=""/><i class="bi bi-clipboard-check navBar__icon"></i>Approvals</NavLink>
           <NavLink to="/settings"  role="tab" class="nav-link"><i class="bi bi-gear navBar__icon"></i>Settings</NavLink>
         </div>
         <NavLink onClick={handleLogout} style={{position: "absolute", bottom: 0, textDecoration: "none"}}><i class="bi bi-door-closed navBar__icon"></i>Log out </NavLink>
