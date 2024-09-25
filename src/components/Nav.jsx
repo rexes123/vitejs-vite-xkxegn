@@ -193,7 +193,7 @@ export default function Nav() {
           <NavLink to="/" role="tab"><i class="bi bi-house navBar__icon"></i> Home</NavLink>
           <NavLink to="/expense"  role="tab"><i className="bi bi-cart-plus navBar__icon"/>Expenses</NavLink>
           <NavLink to="/trips"  role="tab"><i class="bi bi-airplane navBar__icon" />Trip</NavLink>
-          <NavLink to="/approvals"  role="tab"><img src=""/><i class="bi bi-clipboard-check navBar__icon"></i>Approvals</NavLink>
+          <NavLink to="/approvals"  role="tab"><img src=""/><i class="bi bi-clipboard-check navBar__icon"/>Approvals</NavLink>
           <NavLink to="/settings"  role="tab" class="nav-link"><i class="bi bi-gear navBar__icon"></i>Settings</NavLink>
         </div>
         <NavLink onClick={handleLogout} style={{position: "absolute", bottom: 0, textDecoration: "none"}}><i class="bi bi-door-closed navBar__icon"></i>Log out </NavLink>

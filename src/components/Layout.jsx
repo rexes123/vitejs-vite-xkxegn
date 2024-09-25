@@ -2,7 +2,7 @@
 import Nav from "./Nav";
 import { Outlet, NavLink } from "react-router-dom";
 import 'bootstrap';
-import Offcanvas from "../pages/Offcanvas";
+import Offcanvas from "../components/Offcanvas";
 import { useEffect, useState } from "react";
 
 export default function Layout() {

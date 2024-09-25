@@ -1,7 +1,5 @@
-import Nav from "../components/Nav";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Offcanvas from "./Offcanvas";
 
 export default function Dashboard() {
     const navigate = useNavigate();
