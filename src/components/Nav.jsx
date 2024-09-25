@@ -27,6 +27,15 @@ export default function Nav() {
 
   const [loadingImage, setLoadingImage] = useState(true);
 
+
+  useEffect(() => {
+    const offCanvasElement = offCanvasRef.current;
+    if (offCanvasElement) {
+      bootstrap.Offcanvas.getOrCreateInstance(offCanvasElement);
+    }
+  }, []);
+
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (user) {
@@ -95,34 +104,34 @@ export default function Nav() {
     }
   }
 
-   useEffect(()=>{
-  const fetchProfileImage = async () => {
-    if (user) {
-      // Start loading when fetching
-      setLoadingImage(true);
-      try {
-        //Reference to user's posts subcollection
-        const postRef = collection(db, `users/${user.uid}/posts`);
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      if (user) {
+        // Start loading when fetching
+        setLoadingImage(true);
+        try {
+          //Reference to user's posts subcollection
+          const postRef = collection(db, `users/${user.uid}/posts`);
 
-        //Query to get latest post
-        const q = query(postRef, orderBy("timestamp", "desc"), limit(1));
-        const querySnapShot = await getDocs(q);
+          //Query to get latest post
+          const q = query(postRef, orderBy("timestamp", "desc"), limit(1));
+          const querySnapShot = await getDocs(q);
 
-        if (!querySnapShot.empty) {
-          const latestPostDoc = querySnapShot.docs[0];
-          const latestPostData = latestPostDoc.data();
-          setFileUrl(latestPostData.fileUrl || '');
+          if (!querySnapShot.empty) {
+            const latestPostDoc = querySnapShot.docs[0];
+            const latestPostData = latestPostDoc.data();
+            setFileUrl(latestPostData.fileUrl || '');
+          }
+        } catch (e) {
+          console.error('Error fetching document:', e)
+        } finally {
+          setLoadingImage(false);
         }
-      } catch (e) {
-        console.error('Error fetching document:', e)
-      } finally{
-        setLoadingImage(false);
-      }
-    };
-  }
+      };
+    }
 
-  fetchProfileImage()
-   }, [user])
+    fetchProfileImage()
+  }, [user])
 
 
   const [activeTab, setActiveTab] = useState('');
@@ -150,9 +159,9 @@ export default function Nav() {
 
   const offCanvasRef = useRef(null);
 
-  const closeOffCanvas = ()=>{
+  const closeOffCanvas = () => {
     const offCanvas = bootstrap.Offcanvas.getInstance(offCanvasRef.current);
-    if(offCanvas){
+    if (offCanvas) {
       offCanvas.hide();
     }
   };
@@ -174,8 +183,8 @@ export default function Nav() {
             onClick={() => fileUrl && window.open(fileUrl, '_blank')}
           />
         )}
-       
-      
+
+
 
 
         {userData ? (
@@ -188,18 +197,22 @@ export default function Nav() {
           </div>
         ) : (
           <p>No user data available</p>
-          )}
-          <div style={{position: "relative", display:"flex", flexDirection: "column"}}>
+        )}
+        <div style={{ position: "relative", display: "flex", flexDirection: "column" }}>
           <NavLink to="/" role="tab"><i class="bi bi-house navBar__icon"></i> Home</NavLink>
-          <NavLink to="/expense"  role="tab"><i className="bi bi-cart-plus navBar__icon"/>Expenses</NavLink>
-          <NavLink to="/trips"  role="tab"><i class="bi bi-airplane navBar__icon" />Trip</NavLink>
-          <NavLink to="/approvals"  role="tab"><img src=""/><i class="bi bi-clipboard-check navBar__icon"/>Approvals</NavLink>
-          <NavLink to="/settings"  role="tab" class="nav-link"><i class="bi bi-gear navBar__icon"></i>Settings</NavLink>
+          <NavLink to="/expense" activeClassName="active" role="tab">
+            <i className="bi bi-cart-plus navBar__icon" />Expenses
+          </NavLink>
+          <NavLink to="/trips" role="tab"><i class="bi bi-airplane navBar__icon" />Trip</NavLink>
+          <NavLink to="/approvals" role="tab"><i class="bi bi-clipboard-check navBar__icon" />Approvals</NavLink>
+          <NavLink to="/settings" role="tab" class="nav-link"><i class="bi bi-gear navBar__icon"></i>Settings</NavLink>
         </div>
-        <NavLink onClick={handleLogout} style={{position: "absolute", bottom: 0, textDecoration: "none"}}><i class="bi bi-door-closed navBar__icon"></i>Log out </NavLink>
+        <a onClick={handleLogout} style={{ position: 'absolute', bottom: 0, textDecoration: 'none' }}>
+          <i class="bi bi-door-closed navBar__icon"></i>Log out
+        </a>
       </div>
       <div class="tab-content" id="v-pills-tabContent">
-        {renderContent}
+        {renderContent()}
       </div>
     </div>
   )

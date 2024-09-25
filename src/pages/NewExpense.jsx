@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import Nav from "../components/Nav";
 import { useState } from "react";
 import { storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -86,7 +85,6 @@ export default function NewExpense() {
 
     return (
         <div className="container" style={{ display: "flex" }}>
-            <Nav />
             <div className="container">
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <button type="button" className="btn-close" aria-label="Close" onClick={() => navigate('/expense')}></button>

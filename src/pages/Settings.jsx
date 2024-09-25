@@ -1,31 +1,29 @@
-import Nav from "../components/Nav"
-import { useState, useContext, useEffect } from "react"
-import Dashboard from "../pages/Dashboard"
-import Expense from "../pages/Expense"
-import { NavLink } from "react-router-dom";
+import Nav from "../components/Nav";
+import { useState, useContext, useEffect } from "react";
+import Dashboard from "../pages/Dashboard";
+import Expense from "../pages/Expense";
 import { AuthContext } from "../components/AuthProvider";
 import { Timestamp, doc, getDoc, setDoc, collection, orderBy, query, limit, getDocs } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function Settings() {
-
   const { user } = useContext(AuthContext);
-  console.log(user);
-
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
-  console.log(userData);
   const [fileUrl, setFileUrl] = useState('');
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  console.log(file)
   const [loading, setLoading] = useState(true);
-
   const [loadingImage, setLoadingImage] = useState(true);
+
+  // State variables for email, name, and phone
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -36,7 +34,12 @@ export default function Settings() {
           const docSnap = await getDoc(userDoc);
 
           if (docSnap.exists()) {
-            setUserData(docSnap.data());
+            const data = docSnap.data();
+            setUserData(data);
+            // Set the email, name, and phone states based on the fetched data
+            setEmail(data.email || '');
+            setName(data.name || '');
+            setPhone(data.phone || '');
           } else {
             console.log('No such document!');
           }
@@ -47,44 +50,30 @@ export default function Settings() {
         }
       } else {
         console.log('No user is signed in');
-        setLoading(false); //Set loading to false if no user is signed in
+        setLoading(false);
       }
     };
-    fetchUserData()
-  }, [user])
+    fetchUserData();
+  }, [user]);
 
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
-    console.log(selectedFile);
     setFile(selectedFile);
     setUploading(true);
 
     try {
       if (selectedFile && user) {
-        //Create a reference to the storage location
         const imageRef = ref(storage, `post/${selectedFile.name}`);
-
-        //Upload the file
         const uploadResult = await uploadBytes(imageRef, selectedFile);
-
-        //Get the file URL
         const newFileUrl = await getDownloadURL(uploadResult.ref);
 
-        // Create a reference to the user's posts subcollection
         const postsRef = collection(db, `users/${user.uid}/posts`);
         const newPostRef = doc(postsRef);
-
-        //Add the file URL to the new document
         await setDoc(newPostRef, { fileUrl: newFileUrl, timestamp: Timestamp.now() });
 
-        //Update the local state to reflect the image URL
         setFileUrl(newFileUrl);
-
-        //Create a reference to the user's posts subcollection
-        // const postsRef = collection(db, `users/${user.uid}/posts`);
-        // const newPostsRef = doc(postsRef);
       } else {
         console.log('No user is signed in');
       }
@@ -93,18 +82,40 @@ export default function Settings() {
     } finally {
       setUploading(false);
     }
-  }
+  };
+
+  const removeProfilePicture = async () => {
+    if (fileUrl && user) {
+      const imageName = decodeURIComponent(fileUrl.split('/').pop().split('?')[0]);
+      const imageRef = ref(storage, `post/${imageName}`);
+
+      try {
+        await deleteObject(imageRef);
+        const postsRef = collection(db, `users/${user.uid}/posts`);
+        const q = query(postsRef, orderBy("timestamp", "desc"), limit(1));
+        const querySnapShot = await getDocs(q);
+
+        if (!querySnapShot.empty) {
+          const latestPostDoc = querySnapShot.docs[0];
+          await setDoc(latestPostDoc.ref, { fileUrl: '', timestamp: Timestamp.now() }, { merge: true });
+        }
+
+        setFileUrl('');
+        console.log("Profile picture removed successfully.");
+      } catch (e) {
+        console.error('Error removing profile picture:', e);
+      }
+    } else {
+      console.log("No profile picture to remove or no user signed in.");
+    }
+  };
 
   useEffect(() => {
     const fetchProfileImage = async () => {
       if (user) {
-        // Start loading when fetching
         setLoadingImage(true);
         try {
-          //Reference to user's posts subcollection
           const postRef = collection(db, `users/${user.uid}/posts`);
-
-          //Query to get latest post
           const q = query(postRef, orderBy("timestamp", "desc"), limit(1));
           const querySnapShot = await getDocs(q);
 
@@ -114,52 +125,40 @@ export default function Settings() {
             setFileUrl(latestPostData.fileUrl || '');
           }
         } catch (e) {
-          console.error('Error fetching document:', e)
+          console.error('Error fetching document:', e);
         } finally {
           setLoadingImage(false);
         }
-      };
+      }
+    };
+    fetchProfileImage();
+  }, [user]);
+
+  const handleProfileUpdate = async () => {
+    if (user) {
+      try {
+        const userDoc = doc(db, 'users', user.uid);
+        await setDoc(userDoc, { email, name, phone }, { merge: true });
+        alert("Profile updated successfully!");
+      } catch (error) {
+        console.error("Error updating profile:", error);
+      }
+    } else {
+      console.log("No user is signed in");
     }
-
-    fetchProfileImage()
-  }, [user])
-
-
-  const [activeTab, setActiveTab] = useState('');
-  console.log(activeTab);
-
-  const renderContent = () => {
-    if (activeTab === 'home') {
-      return <Dashboard />
-    } else if (activeTab === 'expenses') {
-      return <Expense />
-    }
-  }
-
-  const handleLogout = async () => {
-    const auth = getAuth();
-    try {
-      await auth.signOut();
-      localStorage.removeItem('user');
-      setUserData(null);
-      navigate('/login')
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-
+  };
 
   return (
-    <div class="d-flex align-items-start" id="navBar">
-
-      <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+    <div className="d-flex align-items-start" id="navBar" style={{ width: "100%"}}>
+      <div className="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical" style={{ width: "100%"}}>
+        <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
         {loadingImage ? (
           <div>
             <span className="visually-hidden">Loading...</span>
           </div>
         ) : (
           <img
-            src={fileUrl || 'https://www.kindpng.com/picc/m/451-4517876_default-profile-hd-png-download.png'} // Use a default image if no profile picture is uploaded
+            src={fileUrl || 'https://www.kindpng.com/picc/m/451-4517876_default-profile-hd-png-download.png'}
             alt="Profile"
             style={{ width: '100px', height: '100px', borderRadius: '50%', cursor: 'pointer' }}
             onClick={() => fileUrl && window.open(fileUrl, '_blank')}
@@ -170,37 +169,61 @@ export default function Settings() {
           accept="image/*"
           onChange={handleFileChange}
           id="fileInput"
+          style={{ display: 'none' }}
         />
+        <label htmlFor="fileInput" className="btn btn-secondary" style={{ cursor: 'pointer', marginTop: '10px' }}>
+          Upload Profile Picture
+        </label>
+        <button className="btn btn-danger" onClick={removeProfilePicture} style={{ marginTop: "10px" }}>
+          Remove Profile Picture
+        </button>
+        </div>
+
         {userData && (
           <div style={{ marginTop: "20px" }}>
             <form>
-            <div class="mb-3">
-                <label>Email</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" placeholder={userData.email} />
-              </div>
-
-              <div class="mb-3">
+              <div style={{display: "flex", justifyContent: "space-between"}}>
+            <div className="mb-3" style={{ width: "48%"}}>
                 <label>Name</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" placeholder={userData.name} />
+                <input
+                  type="text"
+                  className="form-control"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className="mb-3" style={{ width: "48%"}}>
+                <label>Email</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              </div>
+      
+              <div className="mb-3" style={{ width: "48%"}}>
+                <label>Phone Number</label>
+                <input
+                  type="tel"
+                  className="form-control"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
               </div>
 
-              <div class="mb-3">
-                <label>Phone number</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" />
+              <div className="mb-3">
+                <label>Bio</label>
+                <textarea className="form-control" name="" id="" cols="30" rows="10"></textarea>
               </div>
             </form>
           </div>
         )}
-        <button type="button" class="btn btn-primary">Update Profile</button>
-
-
-      </div>
-
-
-
-      <div class="tab-content" id="v-pills-tabContent">
-        {renderContent}
+        <button type="button" className="btn btn-primary" onClick={handleProfileUpdate} style={{ width: "25%"}}>
+          Update Profile
+        </button>
       </div>
     </div>
-  )
+  );
 }

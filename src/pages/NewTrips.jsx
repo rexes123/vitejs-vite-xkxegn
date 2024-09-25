@@ -76,7 +76,6 @@ export default function NewTrips() {
     return (
 
         <div className="container" style={{ display: "flex" }}>
-            <Nav />
             <div class="container">
 
                 <form onSubmit={handleSubmit}>

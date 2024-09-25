@@ -125,7 +125,7 @@ export default function Approvals() {
     return (
         <div className="container" style={{ display: "flex" }}>
             <div style={{ width: "100%" }}>
-                <button onClick={navToNewTrip} type="button" className="btn btn-success">+ New trip</button>
+                {/* <button onClick={navToNewTrip} type="button" className="btn btn-success">+ New trip</button> */}
                 {selectedTrips.size > 0 && (
                     <button onClick={handleDeleteSelected} type="button" className="btn btn-danger">Delete Selected</button>
                 )}

@@ -105,6 +105,8 @@ button:focus-visible {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin: 10px;
+  padding: 10px;
 }
 
 p{
@@ -152,4 +154,69 @@ p{
 
 a{
   text-decoration: none;
+}
+
+/* Nav.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  background-color: #f7f7f9;
+  color: #333;
+}
+
+#navBar {
+  display: flex;
+}
+
+.nav {
+  width: 250px;
+  height: 100vh;
+  background-color: #ffffff;
+  padding: 20px;
+  border-right: 1px solid #eaeaea;
+}
+
+.nav img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.nav .form-control {
+  margin-top: 20px;
+}
+
+.nav .nav-link {
+  margin: 10px 0;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.nav .nav-link i {
+  margin-right: 10px;
+}
+
+.nav .nav-link:hover {
+  color: #5e49f9;
+}
+
+.nav .bi-door-closed {
+  margin-right: 10px;
+}
+
+.nav .logout {
+  position: absolute;
+  bottom: 20px;
+}
+
+.tab-content {
+  flex-grow: 1;
+  padding: 40px;
 }
