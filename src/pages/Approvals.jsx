@@ -24,7 +24,7 @@ export default function Approvals() {
             setSelectedTrips(new Set()); //Deselect all
         } else {
             const addIds = new Set(data.map(trip => trip.id));
-            setSelectedTrips(allIds); //Select all
+            setSelectedTrips(addIds); //Select all
         }
         setSelectAll(!selectAll); // Toggle selectAll state
     }
@@ -99,28 +99,35 @@ export default function Approvals() {
     };
 
     const handleStatusChange = async (id, newStatus) => {
+
+        console.log(`Changing status of trip ${id} to ${newStatus}`);
+
         try {
             const response = await fetch(`https://backend-2txi.vercel.app/trips/${id}`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: newStatus })
+                body: JSON.stringify({ status: newStatus }),
             });
-
+    
             if (!response.ok) {
                 throw new Error('Failed to update status');
             }
-
-            setData(prevData =>
-                prevData.map(trip =>
-                    trip.id === id ? { ...trip, status: newStatus } : trip
+    
+            const updatedTrip = await response.json();
+    
+            // Update the local data state after a successful status change
+            setData(prevData => 
+                prevData.map(trip => 
+                    trip.id === id ? updatedTrip : trip
                 )
             );
         } catch (error) {
             console.error('Error updating status:', error);
         }
     };
+    
 
     return (
         <div className="container" style={{ display: "flex" }}>
@@ -162,7 +169,7 @@ export default function Approvals() {
                                 <td>{trip.category}</td>
                                 <td>{trip.amount}</td>
                                 <td>{trip.create_at}</td>
-                                <img src={trip.invoiceurl} style={{ height: "100px", width: "100px" }} alt="Invoice" />
+                                <img src={trip.invoiceurl} style={{ height: "100px", width: "100px" }} alt="Invoice" onClick={()=> handleViewImage(trip.invoiceurl)} />
 
 
                                 {userRole === 'admin' ? (

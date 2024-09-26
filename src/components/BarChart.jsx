@@ -20,18 +20,18 @@ export default function BarChar (){
         responsive: true,
         plugins: {
             legend: {
-                display: false,
+                display: true,
             },
             title:{
                 display: true,
                 text: "Day-to-Day expenses",
-                color: 'white'
+                color: 'black'
             },
         },
         scales:{
             x: {
                 ticks: {
-                    color: 'white'
+                    color: 'black'
                 },
             },
             beginAtZero: true, //Ensure the Y-axis start at 0

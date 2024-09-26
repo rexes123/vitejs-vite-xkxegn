@@ -18,6 +18,14 @@ export default function Dashboard() {
     const [pendingStatus, setPendingStatus] = useState(0);
     const [data, setData] = useState([]);
     const [expenses, setExpenses] = useState([]); // Store actual expenses
+
+    // for (let i = 0; i < expenses.length; i++){
+    //     console.log(expenses[i].team === "Software development");
+    // }
+
+    const softDevExpense = expenses.filter(expense => expense.team === "Software development");
+    console.log(softDevExpense.length);
+
     // console.log(expenses.create_timestamp);
     const [trips, setTrips] = useState(0);
 

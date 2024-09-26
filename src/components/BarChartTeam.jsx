@@ -7,22 +7,21 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function BarChartTeam() {
     const data = {
-        labels: ['Project Manager', 'Software developer', 'MB'],
+        labels: ['Project Managment', 'Software development', 'Design team'],
         datasets: [
             {
                 label: 'Spending',
-                data: [8000, 3000 ,5000],
+                data: [8000, 3000, 5000],
                 backgroundColor: ['Blue', 'Yellow', 'Orange'],
-                borderRadius: 5
             },
         ],
     };
 
-    const options ={
+    const options = {
         responsive: true,
         plugins: {
             legend: {
-                display: false, //Hide the legend as it's not in the reference image
+                display: true, //Hide the legend as it's not in the reference image
             },
 
             title: {
@@ -30,29 +29,29 @@ export default function BarChartTeam() {
                 text: 'Team Spending Trend',
                 color: 'White',
                 font: {
-                    size: 16, //Adjust font size as needed
-                }, 
+                    size: 10, //Adjust font size as needed
+                },
             },
         },
 
-        scales:{
+        scales: {
             x: {
                 ticks: {
-                    color: 'White', // Color for x-axis labels
+                    color: 'Black', // Color for x-axis labels
                 },
             },
 
             y: {
-                beginAtZero: true,
+                beginAtZero: true,// Ensure Y-axis start at 0
                 ticks: {
-                    color: 'white',//Color for the Y-axis labels
-                    stepSize: 2000 // Steps for Y-axis
+                    color: 'Black',// Color for the Y-axis labels
+                    stepSize: 1000 // Steps for Y-axis
                 },
                 min: 0,
-                max: 1000,
+                max: 10000, //Set the maximum value to match the chart's 100k scale
             },
         },
     };
 
-    return <Bar data={data} options={options}/>;
+    return <Bar data={data} options={options} />;
 }

@@ -17,7 +17,8 @@ export default function NewExpense() {
     const [invoiceFile, setInvoiceFile] = useState(null);
     const [invoiceUrl, setInvoiceUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [showModal, setShowModal] = useState(false); // New state for modal visibility
+    const [showModal, setShowModal] = useState(false); 
+    const [team, setTeam] = useState('')
 
 
     const handleFileChange = (e) => {
@@ -47,6 +48,7 @@ export default function NewExpense() {
             category,
             description,
             employee,
+            team
         };
 
         if (invoiceFile) {
@@ -102,7 +104,9 @@ export default function NewExpense() {
                             { label: "Total*", value: amount, setter: setAmount, type: "number" },
                             { label: "Category*", value: category, setter: setCategory, select: true, options: ["Select Type", "Trip", "Services", "Catering"] },
                             { label: "Description", value: description, setter: setDescription },
-                            { label: "Employee*", value: employee, setter: setEmployee },
+                            { label: "Employee Name*", value: employee, setter: setEmployee },
+                            { label: "Team*", value: team, setter: setTeam, select: true, options:["Select team", "Project management", "Software development", "Design team"] },
+
                         ].map(({ label, value, setter, type, select, options }, index) => (
                             <div className="mb-3 row" key={index}>
                                 <label className="col-sm-2 col-form-label">{label}</label>
@@ -129,7 +133,11 @@ export default function NewExpense() {
                     </div>
 
                     <label style={{ width: "45%", border: "1px solid black", display: "flex", justifyContent: "center", alignItems: "center" }} htmlFor="file-upload">
-                        <input type="file" id="file-upload" style={{ display: 'none' }} onChange={handleFileChange} />
+                        <input 
+                        type="file" 
+                        id="file-upload" 
+                        style={{ display: 'none' }} 
+                        onChange={handleFileChange} />
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
                             <i className="bi bi-plus"></i>
                             <p>Upload an invoice</p>
