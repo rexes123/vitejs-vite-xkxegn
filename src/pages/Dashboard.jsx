@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BarChar from "../components/BarChart";
+import BarChartTeam from "../components/BarChartTeam";
 
 
 export default function Dashboard() {
@@ -148,7 +149,7 @@ export default function Dashboard() {
 
             <div className="row">
                 <div className="card col-sm-6">
-                    col-sm-6
+                    <BarChartTeam/>
                 </div>
                 <div className="card col-sm-6"><BarChar /></div>
             </div>
