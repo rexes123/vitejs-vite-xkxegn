@@ -97,36 +97,39 @@ export default function Approvals() {
         setSelectImage(imageUrl);
         setShowImageModal(true);
     };
-
-    const handleStatusChange = async (id, newStatus) => {
-
-        console.log(`Changing status of trip ${id} to ${newStatus}`);
-
+    const handleStatusChange = async (id, newStatus, type) => {
+        console.log(`Changing status of ${type} ${id} to ${newStatus}`);
+    
+        let endpoint = type === 'trip' 
+            ? `https://backend-2txi.vercel.app/trips/${id}` 
+            : `https://backend-2txi.vercel.app/expenses/${id}`;
+    
         try {
-            const response = await fetch(`https://backend-2txi.vercel.app/trips/${id}`, {
-                method: 'PATCH',
+            const response = await fetch(endpoint, {
+                method: 'PATCH', // Use PATCH to update only the status
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: newStatus }),
+                body: JSON.stringify({ status: newStatus }), // Only send the status field
             });
     
             if (!response.ok) {
                 throw new Error('Failed to update status');
             }
     
-            const updatedTrip = await response.json();
+            const responseData = await response.json();
     
             // Update the local data state after a successful status change
-            setData(prevData => 
-                prevData.map(trip => 
-                    trip.id === id ? updatedTrip : trip
+            setData(prevData =>
+                prevData.map(item =>
+                    item.id === id ? responseData : item
                 )
             );
         } catch (error) {
             console.error('Error updating status:', error);
         }
     };
+    
     
 
     return (
