@@ -7,7 +7,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function BarChartTeam() {
     const data = {
-        labels: ['Project Managment', 'Software development', 'Design team'],
+        labels: ['Project Management', 'Software development', 'Design team'],
         datasets: [
             {
                 label: 'Spending',
