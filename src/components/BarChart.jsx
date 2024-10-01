@@ -1,10 +1,24 @@
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, scales } from "chart.js";
+import { useEffect } from "react";
 
 // Register chart components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function BarChar (){
+
+
+    useEffect(()=>{
+        const getData = async() =>{
+            const response = await fetch('https://backend-2txi.vercel.app/expenses');
+            const data = await response.json();
+            console.log(data);
+        }
+        getData();
+    }, [])
+
+
+
     const data = {
         labels: ['Trip', 'Services', 'Catering'],
         datasets: [

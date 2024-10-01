@@ -22,6 +22,7 @@ export default function Expense() {
         getData();
     }, []);
 
+
     const handleCheckBoxChange = (id) => {
         const updatedSelection = new Set(selectedExpenses);
         if (updatedSelection.has(id)) {
