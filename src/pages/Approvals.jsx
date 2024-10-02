@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import Nav from "../components/Nav";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../components/AuthProvider";
-import { Button, Modal } from "react-bootstrap";
 
 export default function Approvals() {
     const navigate = useNavigate();
@@ -18,6 +16,9 @@ export default function Approvals() {
     const [show, setShow] = useState(false);
     //Track if all trips are selected
     const [selectAll, setSelectAll] = useState(false);
+    const [expenses, setExpenses] = useState([])
+
+    console.log(expenses);
 
     const handleSelectAllChange = () => {
         if (selectAll) {
@@ -99,28 +100,28 @@ export default function Approvals() {
     };
 
 
-    const handleStatusChange = async (id, newStatus, type = 'trip') => {
-        let endpoint = type === 'trip' 
-            ? `https://backend-2txi.vercel.app/trips/status/${id}` 
-            : `https://backend-2txi.vercel.app/expenses/status/${id}`;
+    const handleStatusChange = async (id, newStatus) => {
+        let endpoint = `https://backend-2txi.vercel.app/expenses/status/${id}`;
     
         try {
-            const response = fetch(endpoint, {
+            const response = await fetch(endpoint, {
                 method: 'PUT',
                 headers:{
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ status: newStatus}) 
-            })
+            });
 
             if(!response.ok){
-                throw new Error('Failed to update status');
+                const errorText = await response.text();
+                console.error(`Error: ${response.status} - ${errorText}`);
+                throw new Error(`Failed to update status: ${errorText}`);
             }
 
             const responseData = await response.json();
-
-            //Update the local data state after a successful status change
-            setData(prevData => prevData.map(item => item.id === id ? responseData.trip || responseData.expense : item));
+            setExpenses(prevExpenses => prevExpenses.map(expense =>
+                expense.id === id ? responseData.trip : expense
+            ));
 
         } catch (error) {
             console.error('Error updating status:', error);
