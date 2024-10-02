@@ -30,8 +30,10 @@ export default function BarChartTeam() {
 
             const projMan = data.filter((obj)=> obj.team === "Project management");
             console.log(projMan);
+            
             const projManExpense = projMan.reduce((acc, item)=> acc + parseFloat(item.amount), 0);
             console.log(projManExpense);
+
             setTotalProjManAmount(projManExpense);
 
             const designTeamName = data.filter((obj)=> obj.team === "Design team");    
