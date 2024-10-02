@@ -97,34 +97,40 @@ export default function Approvals() {
         setSelectImage(imageUrl);
         setShowImageModal(true);
     };
-    const handleStatusChange = async (id, newStatus, type) => {
-        console.log(`Changing status of ${type} ${id} to ${newStatus}`);
-    
+
+
+    const handleStatusChange = async (id, newStatus, type = 'trip') => {
         let endpoint = type === 'trip' 
-            ? `https://backend-2txi.vercel.app/trips/${id}` 
-            : `https://backend-2txi.vercel.app/expenses/${id}`;
+            ? `https://backend-2txi.vercel.app/trips/status/${id}` 
+            : `https://backend-2txi.vercel.app/expenses/status/${id}`;
     
         try {
-            const response = await fetch(endpoint, {
-                method: 'PATCH', // Use PATCH to update only the status
-                headers: {
+            // Find the existing trip data to retain all field
+            const tripToUpdate = data.find(trip => trip.id === id);
+
+            //Prepare the updated trip object with the new status
+            const updatedTrip = {
+                ...tripToUpdate,
+                status: newStatus
+            };
+
+            const response = fetch(endpoint, {
+                method: 'PUT',
+                headers:{
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: newStatus }), // Only send the status field
-            });
-    
-            if (!response.ok) {
+                body: JSON.stringify(updatedTrip) //Send the complete resource
+            })
+
+            if(!response.ok){
                 throw new Error('Failed to update status');
             }
-    
+
             const responseData = await response.json();
-    
-            // Update the local data state after a successful status change
-            setData(prevData =>
-                prevData.map(item =>
-                    item.id === id ? responseData : item
-                )
-            );
+
+            //Update the local data state after a successful status change
+            setData(prevData => prevData.map(item => item.id === id ? responseData : item));
+
         } catch (error) {
             console.error('Error updating status:', error);
         }
