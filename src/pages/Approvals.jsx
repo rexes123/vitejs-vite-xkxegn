@@ -105,21 +105,12 @@ export default function Approvals() {
             : `https://backend-2txi.vercel.app/expenses/status/${id}`;
     
         try {
-            // Find the existing trip data to retain all field
-            const tripToUpdate = data.find(trip => trip.id === id);
-
-            //Prepare the updated trip object with the new status
-            const updatedTrip = {
-                ...tripToUpdate,
-                status: newStatus
-            };
-
             const response = fetch(endpoint, {
                 method: 'PUT',
                 headers:{
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(updatedTrip) //Send the complete resource
+                body: JSON.stringify({ status: newStatus}) 
             })
 
             if(!response.ok){
@@ -129,7 +120,7 @@ export default function Approvals() {
             const responseData = await response.json();
 
             //Update the local data state after a successful status change
-            setData(prevData => prevData.map(item => item.id === id ? responseData : item));
+            setData(prevData => prevData.map(item => item.id === id ? responseData.trip || responseData.expense : item));
 
         } catch (error) {
             console.error('Error updating status:', error);
