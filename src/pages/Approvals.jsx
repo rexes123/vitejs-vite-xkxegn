@@ -107,13 +107,16 @@ export default function Approvals() {
 
 
     const handleStatusChange = async (id, newStatus) => {
+        
+        console.log("Updating ID:", id, "with new status", newStatus);
+
         setData(prevData => prevData.map(trip =>
             trip.id === id ? { ...trip, status: newStatus } : trip
         ));
-
-        let expensesEndPoint = `https://backend-2txi.vercel.app/expenses/status/${id}`;
-        let tripsEndPoint = `https://backend-2txi.vercel.app/trips/status/${id}`
-
+    
+        const expensesEndPoint = `https://backend-2txi.vercel.app/expenses/status/${id}`;
+        const tripsEndPoint = `https://backend-2txi.vercel.app/trips/status/${id}`;
+    
         try {
             // Update expense status
             const expensesResponse = await fetch(expensesEndPoint, {
@@ -123,15 +126,15 @@ export default function Approvals() {
                 },
                 body: JSON.stringify({ status: newStatus })
             });
-
-            //Check if expense update was successful
+    
+            // Check if expense update was successful
             if (!expensesResponse.ok) {
                 const errorText = await expensesResponse.text();
-                console.error(`Error: ${expensesResponse.status} - ${errorText}`);
-                throw new Error(`Failed to update status: ${errorText}`);
+                console.error(`Error updating expense: ${expensesResponse.status} - ${errorText}`);
+                throw new Error(`Failed to update expense status: ${errorText}`);
             }
-
-
+    
+            // Update trip status
             const tripsResponse = await fetch(tripsEndPoint, {
                 method: 'PUT',
                 headers: {
@@ -139,14 +142,14 @@ export default function Approvals() {
                 },
                 body: JSON.stringify({ status: newStatus })
             });
-
-            //Check if expense update was successful
+    
+            // Check if trip update was successful
             if (!tripsResponse.ok) {
                 const errorText = await tripsResponse.text();
-                console.error(`Error: ${tripsResponse.status} - ${errorText}`);
-                throw new Error(`Failed to update status: ${errorText}`);
+                console.error(`Error updating trip: ${tripsResponse.status} - ${errorText}`);
+                throw new Error(`Failed to update trip status: ${errorText}`);
             }
-
+    
         } catch (error) {
             console.error('Error updating status:', error);
             // Optionally revert the optimistic update on error
@@ -155,6 +158,7 @@ export default function Approvals() {
             ));
         }
     };
+    
 
 
 
