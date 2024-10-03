@@ -110,24 +110,43 @@ export default function Approvals() {
         setData(prevData => prevData.map(trip =>
             trip.id === id ? { ...trip, status: newStatus } : trip
         ));
-    
-        let endpoint = `https://backend-2txi.vercel.app/expenses/status/${id}`;
-        
+
+        let expensesEndPoint = `https://backend-2txi.vercel.app/expenses/status/${id}`;
+        let tripsEndPoint = `https://backend-2txi.vercel.app/trips/status/${id}`
+
         try {
-            const response = await fetch(endpoint, {
+            // Update expense status
+            const expensesResponse = await fetch(expensesEndPoint, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: newStatus }) 
+                body: JSON.stringify({ status: newStatus })
             });
-    
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error(`Error: ${response.status} - ${errorText}`);
+
+            //Check if expense update was successful
+            if (!expensesResponse.ok) {
+                const errorText = await expensesResponse.text();
+                console.error(`Error: ${expensesResponse.status} - ${errorText}`);
                 throw new Error(`Failed to update status: ${errorText}`);
             }
-    
+
+
+            const tripsResponse = await fetch(tripsEndPoint, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            //Check if expense update was successful
+            if (!tripsResponse.ok) {
+                const errorText = await tripsResponse.text();
+                console.error(`Error: ${tripsResponse.status} - ${errorText}`);
+                throw new Error(`Failed to update status: ${errorText}`);
+            }
+
         } catch (error) {
             console.error('Error updating status:', error);
             // Optionally revert the optimistic update on error
@@ -136,8 +155,8 @@ export default function Approvals() {
             ));
         }
     };
-    
-    
+
+
 
     return (
         <div className="container" style={{ display: "flex" }}>
@@ -179,7 +198,7 @@ export default function Approvals() {
                                 <td>{trip.category}</td>
                                 <td>{trip.amount}</td>
                                 <td>{trip.create_at}</td>
-                                <img src={trip.invoiceurl} style={{ height: "100px", width: "100px" }} alt="Invoice" onClick={()=> handleViewImage(trip.invoiceurl)} />
+                                <img src={trip.invoiceurl} style={{ height: "100px", width: "100px" }} alt="Invoice" onClick={() => handleViewImage(trip.invoiceurl)} />
 
 
                                 {userRole === 'admin' ? (
