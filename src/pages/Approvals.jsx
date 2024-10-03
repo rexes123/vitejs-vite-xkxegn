@@ -42,18 +42,24 @@ export default function Approvals() {
             try {
                 const [expensesResponse, tripsResponse] = await Promise.all([
                     fetch('https://backend-2txi.vercel.app/expenses'),
-                    fetch('https://backend-2txi.vercel.app/trips')
+                    fetch('https://backend-2txi.vercel.app/trips'),
                 ]);
+
+                if (!expensesResponse.ok || !tripsResponse.ok) {
+                    throw new Error('Failed to fetch data');
+                }
 
                 const expensesData = await expensesResponse.json();
                 const tripsData = await tripsResponse.json();
-                const combinedData = [...expensesData, ...tripsData];
 
+                const combinedData = [...expensesData, ...tripsData];
+                console.log(combinedData);
                 setData(combinedData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
+
         getData();
     }, []);
 
@@ -101,30 +107,33 @@ export default function Approvals() {
 
 
     const handleStatusChange = async (id, newStatus) => {
-        let endpoint = `https://backend-2txi.vercel.app/expenses/status/${id}`;
+        setData(prevData => prevData.map(trip =>
+            trip.id === id ? { ...trip, status: newStatus } : trip
+        ));
     
+        let endpoint = `https://backend-2txi.vercel.app/expenses/status/${id}`;
+        
         try {
             const response = await fetch(endpoint, {
                 method: 'PUT',
-                headers:{
+                headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: newStatus}) 
+                body: JSON.stringify({ status: newStatus }) 
             });
-
-            if(!response.ok){
+    
+            if (!response.ok) {
                 const errorText = await response.text();
                 console.error(`Error: ${response.status} - ${errorText}`);
                 throw new Error(`Failed to update status: ${errorText}`);
             }
-
-            const responseData = await response.json();
-            setExpenses(prevExpenses => prevExpenses.map(expense =>
-                expense.id === id ? responseData.trip : expense
-            ));
-
+    
         } catch (error) {
             console.error('Error updating status:', error);
+            // Optionally revert the optimistic update on error
+            setData(prevData => prevData.map(trip =>
+                trip.id === id ? { ...trip, status: prevData.find(t => t.id === id).status } : trip
+            ));
         }
     };
     
