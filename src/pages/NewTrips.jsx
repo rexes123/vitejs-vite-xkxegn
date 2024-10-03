@@ -41,12 +41,12 @@ export default function NewTrips() {
              flight,
              depart_from,
              destination,
-             budget_limit: parseInt(budget_limit),
+             amount: parseInt(budget_limit),
              start_date,
              end_date,
              check_in,
              check_out,
-             hotel
+             hotel,
          };
 
         // //Send data to backend
