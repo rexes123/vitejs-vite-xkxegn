@@ -133,6 +133,11 @@ export default function Approvals() {
                 console.error(`Error updating expense: ${expensesResponse.status} - ${errorText}`);
                 throw new Error(`Failed to update expense status: ${errorText}`);
             }
+
+            console.log("Calling trips endpoint:", tripsEndPoint);
+            console.log("With body:", JSON.stringify({
+                status: newStatus
+            }))
     
             // Update trip status
             const tripsResponse = await fetch(tripsEndPoint, {
