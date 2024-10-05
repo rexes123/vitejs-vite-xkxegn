@@ -71,7 +71,7 @@ export default function Trip() {
     return (
         <div className="container" style={{ display: "flex" }}>
             <div style={{ width: "100%" }}>
-                <button onClick={navToNewTrip} type="button" class="btn btn-success">+ New trip</button>
+                <button onClick={navToNewTrip} type="button" class="btn btn-success" style={{marginRight: "10px"}}>+ New trip</button>
 
                 {/* Conditionally render the Delete button */}
                 {selectedTrips.size > 0 && (
