@@ -6,35 +6,87 @@ export default function Approvals() {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
     const [data, setData] = useState([]);
-    console.log(data);
-    const [selectedTrips, setSelectedTrips] = useState(new Set());
+    const [selectedItems, setSelectedItems] = useState(new Set());
     const [userRole, setUserRole] = useState('user');
-    //Used to hold the url of image that want to display
     const [selectedImage, setSelectImage] = useState(null);
-    console.log(selectedImage);
     const [showImageModal, setShowImageModal] = useState(false);
-    const [show, setShow] = useState(false);
-    //Track if all trips are selected
     const [selectAll, setSelectAll] = useState(false);
-    const [expenses, setExpenses] = useState([])
-
-    console.log(expenses);
 
     const handleSelectAllChange = () => {
-        if (selectAll) {
-            setSelectedTrips(new Set()); //Deselect all
+        setSelectAll(!selectAll);
+        setSelectedItems(selectAll ? new Set() : new Set(data.map(item => item.id)));
+    };
+
+    const handleCheckBoxChange = (id) => {
+        const updatedSelection = new Set(selectedItems);
+        if (updatedSelection.has(id)) {
+            updatedSelection.delete(id);
         } else {
-            const addIds = new Set(data.map(trip => trip.id));
-            setSelectedTrips(addIds); //Select all
+            updatedSelection.add(id);
         }
-        setSelectAll(!selectAll); // Toggle selectAll state
-    }
+        setSelectedItems(updatedSelection);
+        setSelectAll(updatedSelection.size === data.length);
+    };
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleDeleteSelected = async () => {
+        const idsToDelete = Array.from(selectedItems);
+        if (idsToDelete.length === 0) {
+            alert("No items selected for deletion.");
+            return;
+        }
 
-    const navToNewTrip = () => {
-        navigate("/newTrips");
+        await Promise.all(idsToDelete.map(id =>
+            fetch(`https://backend-2txi.vercel.app/${data[0].type}/${id}`, {
+                method: 'DELETE',
+            })
+        ));
+
+        setData(prevData => prevData.filter(item => !idsToDelete.includes(item.id)));
+        setSelectedItems(new Set());
+    };
+
+    const handleViewImage = (imageUrl) => {
+        setSelectImage(imageUrl);
+        setShowImageModal(true);
+    };
+
+    const handleStatusChange = async (id, newStatus, type) => {
+        console.log(`Updating ${type} ID:`, id, "with new status:", newStatus);
+
+        const itemExists = data.some(item => item.id === id);
+        if (!itemExists) {
+            console.error(`No ${type} found with ID: ${id}`);
+            return;
+        }
+
+        // Optimistically update the UI
+        setData(prevData => prevData.map(item =>
+            item.id === id ? { ...item, status: newStatus } : item
+        ));
+
+        const endpoint = `https://backend-2txi.vercel.app/${type}/status/${id}`;
+
+        try {
+            const response = await fetch(endpoint, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (!response.ok) {
+                const responseBody = await response.text();
+                console.error(`Error updating ${type}: ${response.status} - ${responseBody}`);
+                throw new Error(`Failed to update ${type} status: ${responseBody}`);
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+            // Revert optimistic update on error
+            setData(prevData => prevData.map(item =>
+                item.id === id ? { ...item, status: prevData.find(i => i.id === id).status } : item
+            ));
+        }
     };
 
     useEffect(() => {
@@ -52,8 +104,8 @@ export default function Approvals() {
                 const expensesData = await expensesResponse.json();
                 const tripsData = await tripsResponse.json();
 
-                const combinedData = [...expensesData, ...tripsData];
-                console.log(combinedData);
+                // Combine trips and expenses into one data array
+                const combinedData = [...tripsData.map(trip => ({ ...trip, type: 'trips' })), ...expensesData.map(expense => ({ ...expense, type: 'expenses' }))];
                 setData(combinedData);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -71,107 +123,10 @@ export default function Approvals() {
         }
     }, [user]);
 
-    const handleCheckBoxChange = (id) => {
-        const updatedSelection = new Set(selectedTrips);
-        if (updatedSelection.has(id)) {
-            updatedSelection.delete(id);
-        } else {
-            updatedSelection.add(id);
-        }
-        setSelectedTrips(updatedSelection);
-        setSelectAll(updatedSelection.size === data.length); //Update selectAll based on selection
-    };
-
-    const handleDeleteSelected = async () => {
-        const idsToDelete = Array.from(selectedTrips);
-        if (idsToDelete.length === 0) {
-            alert("No trips selected for deletion.");
-            return;
-        }
-
-        await Promise.all(idsToDelete.map(id =>
-            fetch(`https://backend-2txi.vercel.app/trips/${id}`, {
-                method: 'DELETE',
-            })
-        ));
-
-        setData(prevData => prevData.filter(trip => !idsToDelete.includes(trip.id)));
-        setSelectedTrips(new Set());
-    };
-
-    const handleViewImage = (imageUrl) => {
-        console.log(imageUrl);
-        setSelectImage(imageUrl);
-        setShowImageModal(true);
-    };
-
-
-    const handleStatusChange = async (id, newStatus) => {
-        
-        console.log("Updating ID:", id, "with new status", newStatus);
-
-        setData(prevData => prevData.map(trip =>
-            trip.id === id ? { ...trip, status: newStatus } : trip
-        ));
-    
-        const expensesEndPoint = `https://backend-2txi.vercel.app/expenses/status/${id}`;
-        const tripsEndPoint = `https://backend-2txi.vercel.app/trips/status/${id}`;
-    
-        try {
-            // Update expense status
-            const expensesResponse = await fetch(expensesEndPoint, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ status: newStatus })
-            });
-    
-            // Check if expense update was successful
-            if (!expensesResponse.ok) {
-                const errorText = await expensesResponse.text();
-                console.error(`Error updating expense: ${expensesResponse.status} - ${errorText}`);
-                throw new Error(`Failed to update expense status: ${errorText}`);
-            }
-
-            console.log("Calling trips endpoint:", tripsEndPoint);
-            console.log("With body:", JSON.stringify({
-                status: newStatus
-            }))
-    
-            // Update trip status
-            const tripsResponse = await fetch(tripsEndPoint, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ status: newStatus })
-            });
-    
-            // Check if trip update was successful
-            if (!tripsResponse.ok) {
-                const errorText = await tripsResponse.text();
-                console.error(`Error updating trip: ${tripsResponse.status} - ${errorText}`);
-                throw new Error(`Failed to update trip status: ${errorText}`);
-            }
-    
-        } catch (error) {
-            console.error('Error updating status:', error);
-            // Optionally revert the optimistic update on error
-            setData(prevData => prevData.map(trip =>
-                trip.id === id ? { ...trip, status: prevData.find(t => t.id === id).status } : trip
-            ));
-        }
-    };
-    
-
-
-
     return (
         <div className="container" style={{ display: "flex" }}>
             <div style={{ width: "100%" }}>
-                {/* <button onClick={navToNewTrip} type="button" className="btn btn-success">+ New trip</button> */}
-                {selectedTrips.size > 0 && (
+                {selectedItems.size > 0 && (
                     <button onClick={handleDeleteSelected} type="button" className="btn btn-danger">Delete Selected</button>
                 )}
 
@@ -186,36 +141,36 @@ export default function Approvals() {
                                 />
                             </th>
                             <th scope="col">Name</th>
-                            <th scope="col">CATEGORY</th>
-                            <th scope="col">AMOUNT</th>
-                            <th scope="col">FREQUENCY</th>
-                            <th>VIEW</th>
-                            <th scope="col">ACTION</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Frequency</th>
+                            <th>View</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((trip) => (
-                            <tr key={trip.id}>
+                        {data.map((item) => (
+                            <tr key={item.id}>
                                 <th scope="row">
                                     <input
                                         type="checkbox"
-                                        checked={selectedTrips.has(trip.id)}
-                                        onChange={() => handleCheckBoxChange(trip.id)}
+                                        checked={selectedItems.has(item.id)}
+                                        onChange={() => handleCheckBoxChange(item.id)}
                                     />
                                 </th>
-                                <td>{trip.name}</td>
-                                <td>{trip.category}</td>
-                                <td>{trip.amount}</td>
-                                <td>{trip.create_at}</td>
-                                <img src={trip.invoiceurl} style={{ height: "100px", width: "100px" }} alt="Invoice" onClick={() => handleViewImage(trip.invoiceurl)} />
-
-
+                                <td>{item.name}</td>
+                                <td>{item.category}</td>
+                                <td>{item.amount}</td>
+                                <td>{item.create_at}</td>
+                                <td>
+                                    <img src={item.invoiceurl} style={{ height: "100px", width: "100px" }} alt="Invoice" onClick={() => handleViewImage(item.invoiceurl)} />
+                                </td>
                                 {userRole === 'admin' ? (
                                     <td>
                                         <select
                                             className="form-select"
-                                            value={trip.status}
-                                            onChange={(e) => handleStatusChange(trip.id, e.target.value)}
+                                            value={item.status}
+                                            onChange={(e) => handleStatusChange(item.id, e.target.value, item.type)}
                                         >
                                             <option value="approved">Approved</option>
                                             <option value="rejected">Rejected</option>
@@ -223,7 +178,7 @@ export default function Approvals() {
                                         </select>
                                     </td>
                                 ) : (
-                                    <td>{trip.status}</td>
+                                    <td>{item.status}</td>
                                 )}
                             </tr>
                         ))}

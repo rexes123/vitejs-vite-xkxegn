@@ -140,14 +140,14 @@ export default function Dashboard() {
                         +New expense
                     </div>
 
-                    <div className="card col-sm">
+                    {/* <div className="card col-sm">
                         <i className="bi bi-receipt"></i>
                         <span>+Add receipt</span>
-                    </div>
-                    <div className="card col-sm">
+                    </div> */}
+                    {/* <div className="card col-sm">
                         <i className="bi bi-files"></i>
                         <span>+Create report</span>
-                    </div>
+                    </div> */}
                     <div className="card col-sm" onClick={navToTrip}>
                         <i className="bi bi-airplane"></i>
                         <span>+Create trip</span>
