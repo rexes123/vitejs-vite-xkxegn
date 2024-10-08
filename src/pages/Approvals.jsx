@@ -133,13 +133,20 @@ export default function Approvals() {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th scope="col">
-                                <input
-                                    type="checkbox"
-                                    checked={selectAll}
-                                    onChange={handleSelectAllChange}
-                                />
-                            </th>
+                            {
+                                userRole === 'admin' && (
+                                    <th scope="col">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectAll}
+                                        onChange={handleSelectAllChange}
+                                    />
+                                </th>
+                                )
+                            }
+                           
+
+
                             <th scope="col">Name</th>
                             <th scope="col">Category</th>
                             <th scope="col">Amount</th>
@@ -151,13 +158,17 @@ export default function Approvals() {
                     <tbody>
                         {data.map((item) => (
                             <tr key={item.id}>
-                                <th scope="row">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedItems.has(item.id)}
-                                        onChange={() => handleCheckBoxChange(item.id)}
-                                    />
-                                </th>
+                                {
+                                    userRole === 'admin' && (
+                                        <th scope="row">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedItems.has(item.id)}
+                                                onChange={() => handleCheckBoxChange(item.id)}
+                                            />
+                                        </th>
+                                    )
+                                }
                                 <td>{item.name}</td>
                                 <td>{item.category}</td>
                                 <td>{item.amount}</td>
