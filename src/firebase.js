@@ -5,20 +5,17 @@ import { getAuth } from "firebase/auth"
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyCilH8jOJK4Q3kYxAcRgDIINux5xaAd27A",
+  apiKey: import.meta.env.VITE_API_KEY,
 
-  authDomain: "final-capstone-assessment.firebaseapp.com",
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
 
-  projectId: "final-capstone-assessment",
+  projectId: import.meta.env.VITE_PROJECT_ID,
 
-  storageBucket: "final-capstone-assessment.appspot.com",
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
 
-  messagingSenderId: "804488964950",
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
 
-  appId: "1:804488964950:web:24dad1cb3cb98f7818c4f7",
-
-  measurementId: "G-PF98VW1WQC"
-
+  appId: import.meta.env.VITE_APP_ID,
 };
 
 
