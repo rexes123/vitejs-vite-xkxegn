@@ -134,7 +134,7 @@ export default function Dashboard() {
             <div className="row card" style={{paddingInline: "10px"}}>
                 <p>Quick Access</p>
                 <hr/>
-                <div className="row" style={{ padding: "calc(var(--bs-gutter-x)* .5)"}}>
+                <div className="row" style={{ padding: "calc(var(--bs-gutter-x)* .5)", gap: "10px"}}>
                     <div className="card col-sm" onClick={navToExpense}>
                         <i className="bi bi-wallet2"></i>
                         +New expense
