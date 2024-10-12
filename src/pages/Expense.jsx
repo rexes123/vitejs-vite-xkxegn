@@ -7,6 +7,11 @@ export default function Expense() {
     const [selectedExpenses, setSelectedExpenses] = useState(new Set());
     const navigate = useNavigate();
 
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userEmail = user ? user.email : null;
+    console.log(userEmail);
+
+
     const handleAdd = () => {
         navigate("/newExpense");
     };
@@ -16,11 +21,14 @@ export default function Expense() {
     useEffect(() => {
         const getData = async () => {
             const response = await fetch('https://backend-2txi.vercel.app/expenses');
-            const data = await response.json();
-            setData(data);
+            const allExpenses = await response.json();
+
+            // Filter expenses based on user email
+            const filteredExpenses = userEmail === "admin@gmail.com" ? allExpenses : allExpenses.filter(expense=> expense.userEmail === userEmail);
+            setData(filteredExpenses);
         };
         getData();
-    }, []);
+    }, [userEmail]);
 
 
     const handleCheckBoxChange = (id) => {

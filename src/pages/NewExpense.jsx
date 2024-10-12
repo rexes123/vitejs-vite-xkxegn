@@ -19,6 +19,13 @@ export default function NewExpense() {
     const [errorMessage, setErrorMessage] = useState('');
     const [showModal, setShowModal] = useState(false); 
     const [team, setTeam] = useState('')
+    const [userEmail, setUserEmail] = useState(null);
+
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const getUserEmail = user ? user.email : null;
+    // console.log(userEmail);
+    setUserEmail(getUserEmail);
 
 
     const handleFileChange = (e) => {
@@ -30,8 +37,8 @@ export default function NewExpense() {
             setErrorMessage("Please fill in all required fields.");
             return false;
         }
-        if (amount <= 0) {
-            setErrorMessage("Amount must be greater than zero.");
+        if (isNaN(amount) || amount <= 0) {
+            setErrorMessage("Amount must be a positive number.");
             return false;
         }
         return true;
@@ -48,7 +55,8 @@ export default function NewExpense() {
             category,
             description,
             employee,
-            team
+            team,
+            userEmail
         };
 
         if (invoiceFile) {
