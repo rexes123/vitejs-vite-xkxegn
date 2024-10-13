@@ -1,6 +1,7 @@
 import Nav from "../components/Nav"
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import { Navigate, useNavigate } from "react-router-dom";
+import { AuthContext } from "../components/AuthProvider";
 
 export default function NewTrips() {
     //Define state variable for each input field
@@ -16,6 +17,9 @@ export default function NewTrips() {
     const [check_in, setCheck_in] = useState('');
     const [check_out, setCheck_out] = useState('')
     const [hotel, setHotel] = useState('');
+
+    const { user } = useContext(AuthContext)
+    console.log(user.uid);
 
     console.log(name);
     console.log(type);
@@ -47,7 +51,10 @@ export default function NewTrips() {
              check_in,
              check_out,
              hotel,
+             uid: user.uid
          };
+
+         console.log(formData);
 
         // //Send data to backend
          try{

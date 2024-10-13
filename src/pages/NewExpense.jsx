@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useContext } from "react";
+import { AuthContext } from "../components/AuthProvider";
 
 export default function NewExpense() {
     const navigate = useNavigate();
@@ -22,11 +24,8 @@ export default function NewExpense() {
     const [userEmail, setUserEmail] = useState(null);
 
 
-    const user = JSON.parse(localStorage.getItem('user'));
-    const getUserEmail = user ? user.email : null;
-    // console.log(userEmail);
-    setUserEmail(getUserEmail);
-
+    const user = useContext(AuthContext);
+    console.log(user);
 
     const handleFileChange = (e) => {
         setInvoiceFile(e.target.files[0]);
@@ -56,8 +55,10 @@ export default function NewExpense() {
             description,
             employee,
             team,
-            userEmail
+            uid: user.user.uid
         };
+
+        console.log(obj);
 
         if (invoiceFile) {
             const fileRef = ref(storage, `invoice/${invoiceFile.name}`);

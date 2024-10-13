@@ -1,54 +1,60 @@
-
-// import Nav from "./Nav";
-import { Outlet, NavLink } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
-import { useRef } from "react";
-
+import { auth } from "../firebase";
 
 export default function Offcanvas() {
-    const offCanvasRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
+    const navigate = useNavigate();
 
-    const closeOffCanvas = () => {
-        const offCanvas = bootstrap.Offcanvas.getInstance(offCanvasRef.current);
-        if (offCanvas) {
-            offCanvas.hide();
+    const toggleOffcanvas = () => {
+        setIsVisible(!isVisible);
+    };
+
+    const handleNavigation = (path) => {
+        setIsVisible(false);
+        navigate(path);
+    };
+
+    const handleLogout = async () => {
+        console.log('Log out')
+        const auth = getAuth();
+        try {
+          await auth.signOut();
+          localStorage.removeItem('user');
+          setUserData(null);
+          navigate('/login')
+        } catch (error) {
+          console.error(error.message);
         }
-    }
+      }
 
     return (
-        <div className="container" >
-            <button
-                class="btn btn-primary"
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasTop"
-                aria-controls="offcanvasTop"
-            ><i class="bi bi-list"></i>
+        <div className="container" style={{ marginBottom: "10px" }}>
+            <button className="btn btn-primary" onClick={toggleOffcanvas}>
+                <i className="bi bi-list"></i>
             </button>
 
-            <div
-                ref={offCanvasRef}
-                class="offcanvas offcanvas-top container"
-                tabindex="-1"
-                id="offcanvasTop"
-                aria-labelledby="offcanvasTopLabel"
-            >
-
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasTopLabel">Offcanvas top</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <div className={`offcanvas offcanvas-start ${isVisible ? 'show' : ''}`} tabIndex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+                <div className="offcanvas-header">
+                    <h5 className="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas Navigation</h5>
+                    <button type="button" className="btn-close" onClick={toggleOffcanvas}></button>
                 </div>
+                <div className="offcanvas-body" style={{ display: "flex", flexDirection: "column", position: "relative" }}>
+                    <a onClick={() => handleNavigation("/")}><i class="bi bi-house navBar__icon" i />Home</a>
+                    <a onClick={() => handleNavigation("/expense")}><i className="bi bi-cart-plus navBar__icon" />Expenses</a>
+                    <a onClick={() => handleNavigation("/trips")}><i class="bi bi-airplane navBar__icon" />Trip</a>
+                    <a onClick={() => handleNavigation("/approvals")}><i class="bi bi-clipboard-check navBar__icon" />Approvals</a>
+                    <a onClick={() => handleNavigation("/settings")}><i class="bi bi-gear navBar__icon" />Settings</a>
 
-                <div class="offcanvas-body" style={{ display: "flex", flexDirection: "column" }}>
-                {/* <button to="/" role="tab" onClick={closeOffCanvas} data-bs-dismiss="offcanvas" aria-label="Close">Home</button> */}
-
-                    <NavLink to="/" role="tab" onClick={closeOffCanvas}><i class="bi bi-house navBar__icon"></i> Home</NavLink>
-                    <NavLink to="/expense" role="tab" onClick={closeOffCanvas}><i className="bi bi-cart-plus navBar__icon" />Expenses</NavLink>
-                    <NavLink to="/trips" role="tab" onClick={closeOffCanvas}><i class="bi bi-airplane navBar__icon" />Trip</NavLink>
-                    <NavLink to="/approvals" role="tab" onClick={closeOffCanvas}><img src="" />Approvals</NavLink>
-                    <NavLink to="/settings" role="tab" onClick={closeOffCanvas} class="nav-link"><i class="bi bi-gear navBar__icon"></i>Settings</NavLink>
+                    <a style={{ position: "absolute", bottom: "0" }} onClick={handleLogout}>
+                        <i class="bi bi-door-closed navBar__icon"></i>Log out
+                    </a>
                 </div>
-            </div> 
+                  
+
+            </div>
         </div>
-    )
+    );
 }

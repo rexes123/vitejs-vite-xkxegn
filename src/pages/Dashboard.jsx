@@ -58,7 +58,7 @@ export default function Dashboard() {
 
     return (
         <div className="container">
-            <div className="row">
+            <div className="row tasksAndExpense">
                 <div className="card col-sm-5">
                     <p>Pending Tasks</p>
                     <hr />
@@ -131,10 +131,10 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            <div className="row card" style={{paddingInline: "10px"}}>
+            <div className="row card" style={{paddingInline: "10px", marginRight: "0px"}}>
                 <p>Quick Access</p>
                 <hr/>
-                <div className="row" style={{ padding: "calc(var(--bs-gutter-x)* .5)", gap: "10px"}}>
+                <div className="row" style={{ padding: "calc(var(--bs-gutter-x)* .5)", margin: "0px"}}>
                     <div className="card col-sm" onClick={navToExpense}>
                         <i className="bi bi-wallet2"></i>
                         +New expense
@@ -155,7 +155,7 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            <div className="row">
+            <div className="row chart">
                 <div className="card col-sm-6">
                     <BarChartTeam/>
                 </div>

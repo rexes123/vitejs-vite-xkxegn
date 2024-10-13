@@ -21,3 +21,50 @@
 a{
   text-decoration: none;
 }
+
+.row{
+  flex-wrap: unset;
+  margin: 10px;
+  gap: 10px;
+}
+
+hr{
+  margin: 0px;
+}
+
+@media (max-width: 992px){
+  .d-flex.align-items-start#navBar{
+    display: none !important
+  
+  }
+}
+
+
+a{
+  color: unset;
+}
+
+@media (max-width: 768px){
+  .tasksAndExpense{
+    display: flex;
+    flex-direction: column;
+
+    >.card.col-sm-5{
+      width: 100%;
+    }
+
+    >.card.col-sm-7{
+      width: 100%;
+    }
+  }
+  .row{
+    &.chart{
+      display: flex;
+      flex-direction: column;
+
+      >.card.col-sm-6{
+        width: 100%;
+      }
+    }
+  }
+}

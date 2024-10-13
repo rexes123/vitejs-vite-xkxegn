@@ -1,15 +1,31 @@
-import { useState, useEffect } from "react";
-import Nav from "../components/Nav";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../components/AuthProvider";
 
 export default function Expense() {
     const [data, setData] = useState([]);
     const [selectedExpenses, setSelectedExpenses] = useState(new Set());
     const navigate = useNavigate();
 
-    const user = JSON.parse(localStorage.getItem('user'));
-    const userEmail = user ? user.email : null;
-    console.log(userEmail);
+    const user = useContext(AuthContext);
+
+      useEffect(()=>{
+          if(user){
+              const getData = async ()=>{
+                  try{
+                      const url = user.user.email === 'admin@gmail.com' ? 'https://backend-2txi.vercel.app/expenses' : `https://backend-2txi.vercel.app/expenses/user/${user.user.uid}`;
+                      const response = await fetch(url);
+                      const data = await response.json();
+                      setData(data);
+
+                  } catch(error){
+                    console.error(error.message);
+                  }
+              };
+              getData();
+          }
+      })
+
 
 
     const handleAdd = () => {
@@ -18,17 +34,14 @@ export default function Expense() {
 
     console.log(data);
 
-    useEffect(() => {
-        const getData = async () => {
-            const response = await fetch('https://backend-2txi.vercel.app/expenses');
-            const allExpenses = await response.json();
-
-            // Filter expenses based on user email
-            const filteredExpenses = userEmail === "admin@gmail.com" ? allExpenses : allExpenses.filter(expense=> expense.userEmail === userEmail);
-            setData(filteredExpenses);
-        };
-        getData();
-    }, [userEmail]);
+    // useEffect(() => {
+    //     const getData = async () => {
+    //         const response = await fetch('https://backend-2txi.vercel.app/expenses');
+    //         const data = await response.json();
+    //         setData(data);
+    //     };
+    //     getData();
+    // }, []);
 
 
     const handleCheckBoxChange = (id) => {
@@ -41,11 +54,11 @@ export default function Expense() {
         setSelectedExpenses(updatedSelection);
     };
 
-    const handleSelectAll = (event)=>{
-        if(event.target.checked){
+    const handleSelectAll = (event) => {
+        if (event.target.checked) {
             const allExpenseIds = new Set(data.map(trip => trip.id));
             setSelectedExpenses(allExpenseIds);
-        } else{
+        } else {
             setSelectedExpenses(new Set());
         }
     }
@@ -58,7 +71,7 @@ export default function Expense() {
         }
 
         // Make a DELETE request for each selected expense
-        await Promise.all(idsToDelete.map(id => 
+        await Promise.all(idsToDelete.map(id =>
             fetch(`https://backend-2txi.vercel.app/expenses/${id}`, {
                 method: 'DELETE',
             })
@@ -72,7 +85,7 @@ export default function Expense() {
     return (
         <div className="container" style={{ display: "flex" }}>
             <div style={{ width: "100%" }}>
-                <button onClick={handleAdd} type="button" class="btn btn-success" style={{marginRight: "10px"}}>+ New expense</button>
+                <button onClick={handleAdd} type="button" class="btn btn-success" style={{ marginRight: "10px" }}>+ New expense</button>
 
                 {/* Conditionally render the Delete button */}
                 {selectedExpenses.size > 0 && (
@@ -83,12 +96,13 @@ export default function Expense() {
                     <thead>
                         <tr>
                             <th scope="col">
-                                <input 
-                                type="checkbox" 
-                                onChange={handleSelectAll}
-                                checked={selectedExpenses.size == data.length && data.length > 0}
+                                <input
+                                    type="checkbox"
+                                    onChange={handleSelectAll}
+                                    checked={selectedExpenses.size === data.length && data.length > 0}
                                 />
-                                </th>
+
+                            </th>
                             <th scope="col">DETAILS</th>
                             <th scope="col">MERCHANT</th>
                             <th scope="col">REPORT</th>
