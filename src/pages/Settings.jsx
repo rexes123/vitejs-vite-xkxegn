@@ -149,9 +149,9 @@ export default function Settings() {
   };
 
   return (
-    <div className="d-flex align-items-start" id="navBar" style={{ width: "100%"}}>
+    <div className="d-flex align-items-start" style={{ width: "100%"}}>
       <div className="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical" style={{ width: "100%"}}>
-        <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+        <div className="profilePic" style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
         {loadingImage ? (
           <div>
             <span className="visually-hidden">Loading...</span>
@@ -174,9 +174,6 @@ export default function Settings() {
         <label htmlFor="fileInput" className="btn btn-secondary" style={{ cursor: 'pointer', marginTop: '10px' }}>
           Upload Profile Picture
         </label>
-        <button className="btn btn-danger" onClick={removeProfilePicture} style={{ marginTop: "10px" }}>
-          Remove Profile Picture
-        </button>
         </div>
 
         {userData && (

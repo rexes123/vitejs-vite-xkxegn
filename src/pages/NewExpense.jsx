@@ -96,15 +96,19 @@ export default function NewExpense() {
 
     return (
         <div className="container" style={{ display: "flex" }}>
+            
             <div className="container">
+
+
+                
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <button type="button" className="btn-close" aria-label="Close" onClick={() => navigate('/expense')}></button>
                 </div>
 
                 {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <div style={{ width: "45%" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", flexDirection: "column" }}>
+                    <div>
                         {/* Form fields */}
                         {[
                             { label: "Subject", value: subject, setter: setSubject },
@@ -141,7 +145,7 @@ export default function NewExpense() {
                         ))}
                     </div>
 
-                    <label style={{ width: "45%", border: "1px solid black", display: "flex", justifyContent: "center", alignItems: "center" }} htmlFor="file-upload">
+                    <label style={{ border: "1px solid black", display: "flex", justifyContent: "center", alignItems: "center" }} htmlFor="file-upload">
                         <input 
                         type="file" 
                         id="file-upload" 
@@ -153,6 +157,23 @@ export default function NewExpense() {
                         </div>
                     </label>
                 </div>
+                <div class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
                 {invoiceUrl && (
                     <div style={{ marginTop: '20px' }}>
@@ -166,7 +187,7 @@ export default function NewExpense() {
                     </div>
                 )}
 
-                <button onClick={handleSubmit} className="btn btn-primary">Save</button>
+                <button onClick={handleSubmit} className="btn btn-primary" style={{marginTop: "10px"}}>Save</button>
 
                 {/* Modal for image preview */}
                 {showModal && (

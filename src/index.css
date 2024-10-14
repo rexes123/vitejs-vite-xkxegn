@@ -32,6 +32,12 @@ hr{
   margin: 0px;
 }
 
+@media (max-widthL 576px){
+  .profilePic{
+    
+  }
+}
+
 @media (max-width: 992px){
   .d-flex.align-items-start#navBar{
     display: none !important
@@ -43,6 +49,14 @@ hr{
 a{
   color: unset;
 }
+
+.card{
+  &.card.col-sm-6{
+    display: flex;
+    align-items: center;
+  }
+}
+
 
 @media (max-width: 768px){
   .tasksAndExpense{
@@ -58,6 +72,11 @@ a{
     }
   }
   .row{
+    &.quickAccess{
+      display: flex;
+      flex-direction: column;
+    }
+
     &.chart{
       display: flex;
       flex-direction: column;
@@ -67,4 +86,10 @@ a{
       }
     }
   }
+
+  .accomodation{
+    flex-direction: column;
+  }
+  
 }
+

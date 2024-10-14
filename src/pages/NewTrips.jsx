@@ -45,7 +45,7 @@ export default function NewTrips() {
              flight,
              depart_from,
              destination,
-             amount: parseInt(budget_limit),
+             amount: parseInt(budget_limit, 10),
              start_date,
              end_date,
              check_in,
@@ -68,6 +68,7 @@ export default function NewTrips() {
 
              if(response.ok){
                  console.log('Trip saved successfully');
+                 navigate('/trips')
              } else{
                 const errorData = await response.json();
                 console.error('Failed to save trip', response.status, errorData);
@@ -77,7 +78,6 @@ export default function NewTrips() {
          } catch(error){
              console.error(error);
          }
-         navigate('/trips')
     };
 
     return (
@@ -169,7 +169,7 @@ export default function NewTrips() {
                         </div>
                     </div>
 
-                    <div style={{ width: "30%" }}>
+                    <div>
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label">Date</label>
                             <div class="col-sm-10">
@@ -182,7 +182,7 @@ export default function NewTrips() {
                                 <input type="date" class="form-control" id="inputPassword" value={end_date} onChange={(e)=> setEnd_date(e.target.value)}/>
                             </div>
                         </div>
-                    </div>
+                    </div> 
                 </div>
 
                 <h3>ACCOMODATION</h3>
@@ -207,7 +207,7 @@ export default function NewTrips() {
                     </div>
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div className="accomodation" style={{ display: "flex", justifyContent: "space-between" }}>
                     <div style={{ width: "60%", display: 'flex', justifyContent: "space-between" }}>
                         <div class="mb-3 row" style={{width: "104%"}}>
                             <label for="staticEmail" class="col-sm-2 col-form-label" style={{width: "20%"}}>Hotel*</label>
@@ -217,9 +217,8 @@ export default function NewTrips() {
                         </div>
                     </div>
 
-                    <div style={{ width: "30%", display: "flex", justifyContent: "flex-end", gap: "10px" }}>
-                        <button type="button" class="btn btn-primary">Save draft</button>
-                        <button type="submit" class="btn btn-secondary">Save</button>
+                    <div className="hotel" style={{ width: "30%", display: "flex", gap: "10px" }}>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
                 </form>

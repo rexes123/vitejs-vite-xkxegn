@@ -6,6 +6,7 @@ import { AuthContext } from "../components/AuthProvider";
 export default function Trip() {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
+    console.log(data);
     const [selectedTrips, setSelectedTrips] = useState(new Set());
 
     const navToNewTrip = () => {

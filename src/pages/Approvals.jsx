@@ -106,7 +106,12 @@ export default function Approvals() {
 
                 // Combine trips and expenses into one data array
                 const combinedData = [...tripsData.map(trip => ({ ...trip, type: 'trips' })), ...expensesData.map(expense => ({ ...expense, type: 'expenses' }))];
-                setData(combinedData);
+
+                // Sort the combined data by created time
+                const sortedData = combinedData.sort((a, b)=>{
+                    return new Date(a.create_at) - new Date(b.create_at);
+                });
+                setData(sortedData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -123,6 +128,18 @@ export default function Approvals() {
         }
     }, [user]);
 
+    const formatDate = (dateString)=>{
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute:'2-digit',
+            hour12: true
+        })
+    }
+
     return (
         <div className="container" style={{ display: "flex" }}>
             <div style={{ width: "100%" }}>
@@ -136,16 +153,14 @@ export default function Approvals() {
                             {
                                 userRole === 'admin' && (
                                     <th scope="col">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectAll}
-                                        onChange={handleSelectAllChange}
-                                    />
-                                </th>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectAll}
+                                            onChange={handleSelectAllChange}
+                                        />
+                                    </th>
                                 )
                             }
-                           
-
 
                             <th scope="col">Name</th>
                             <th scope="col">Category</th>
@@ -172,9 +187,11 @@ export default function Approvals() {
                                 <td>{item.name}</td>
                                 <td>{item.category}</td>
                                 <td>{item.amount}</td>
-                                <td>{item.create_at}</td>
+                                <td>{formatDate(item.create_at)}</td>
                                 <td>
-                                    <img src={item.invoiceurl} style={{ height: "100px", width: "100px" }} alt="Invoice" onClick={() => handleViewImage(item.invoiceurl)} />
+                                    <div>
+                                        <i className="bi bi-receipt" onClick={() => handleViewImage(item.invoiceurl)}></i>
+                                    </div>
                                 </td>
                                 {userRole === 'admin' ? (
                                     <td>
