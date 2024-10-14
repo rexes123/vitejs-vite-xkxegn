@@ -12,8 +12,6 @@ export default function NewTrips() {
     const [depart_from, setDepart_from] = useState('');
     const [destination, setDestination] = useState('');
     const [budget_limit, setBudget_limit] = useState('');
-    const [start_date, setStart_date] = useState('');
-    const [end_date, setEnd_date] = useState('');
     const [check_in, setCheck_in] = useState('');
     const [check_out, setCheck_out] = useState('')
     const [hotel, setHotel] = useState('');
@@ -46,8 +44,6 @@ export default function NewTrips() {
              depart_from,
              destination,
              amount: parseInt(budget_limit, 10),
-             start_date,
-             end_date,
              check_in,
              check_out,
              hotel,
@@ -155,7 +151,7 @@ export default function NewTrips() {
                         </div>
 
                         <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Destination*</label>
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Return*</label>
                             <div class="col-sm-10">
                                 <input type="datetime-local" class="form-control" id="inputPassword" value={destination} onChange={(e)=> setDestination(e.target.value)}/>
                             </div>
@@ -168,21 +164,6 @@ export default function NewTrips() {
                             </div>
                         </div>
                     </div>
-
-                    <div>
-                        <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Date</label>
-                            <div class="col-sm-10">
-                                <input type="date" class="form-control" id="inputPassword" value={start_date} onChange={(e)=> setStart_date(e.target.value)}/>
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Date</label>
-                            <div class="col-sm-10">
-                                <input type="date" class="form-control" id="inputPassword" value={end_date} onChange={(e)=> setEnd_date(e.target.value)}/>
-                            </div>
-                        </div>
-                    </div> 
                 </div>
 
                 <h3>ACCOMODATION</h3>

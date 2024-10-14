@@ -79,6 +79,18 @@ export default function Trip() {
         setSelectedTrips(new Set());
     };
 
+    const formatDate = (dateString)=>{
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute:'2-digit',
+            hour12: true
+        })
+    }
+
     return (
         <div className="container" style={{ display: "flex" }}>
             <div style={{ width: "100%" }}>
@@ -100,7 +112,8 @@ export default function Trip() {
                                     checked={selectedTrips.size === data.length && data.length > 0}
                                 />
                             </th>
-                            <th scope="col">DESTINATION</th>
+                            <th scope="col">Departure</th>
+                            <th scope="col">RETURN</th>
                             <th scope="col">SUBJECT</th>
                             <th scope="col">AMOUNT</th>
                             <th scope="col">REPORT</th>
@@ -117,7 +130,8 @@ export default function Trip() {
                                         onChange={() => handleCheckboxChange(trips.id)}
                                     />
                                 </th>
-                                <td>{trips.destination}</td>
+                                <td>{formatDate(trips.depart_from)}</td>
+                                <td>{formatDate(trips.destination)}</td>
                                 <td>{trips.purpose}</td>
                                 <td>{trips.amount}</td>
                                 <td>{trips.create_at}</td>

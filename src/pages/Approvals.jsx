@@ -184,7 +184,7 @@ export default function Approvals() {
                                         </th>
                                     )
                                 }
-                                <td>{item.name}</td>
+                                <td>{item.subject || item.name}</td>
                                 <td>{item.category}</td>
                                 <td>{item.amount}</td>
                                 <td>{formatDate(item.create_at)}</td>

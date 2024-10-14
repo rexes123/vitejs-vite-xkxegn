@@ -73,7 +73,7 @@ export default function Dashboard() {
                     <div className="pending-row">
                         <i className="bi bi-airplane"></i>
                         <div className="pending-info">
-                            <span>New Trips Registered</span>
+                            <span>Trips Registered</span>
                             <span>{trips}</span>
                         </div>
                     </div>
@@ -134,12 +134,20 @@ export default function Dashboard() {
             <div className="row card" style={{paddingInline: "10px", marginRight: "0px"}}>
                 <p>Quick Access</p>
                 <hr/>
-                <div className="row quickAccess" style={{ padding: "calc(var(--bs-gutter-x)* .5)", margin: "0px"}}>
+                <div className="row" style={{ padding: "calc(var(--bs-gutter-x)* .5)", margin: "0px"}}>
                     <div className="card col-sm" onClick={navToExpense}>
                         <i className="bi bi-wallet2"></i>
                         +New expense
                     </div>
 
+                    {/* <div className="card col-sm">
+                        <i className="bi bi-receipt"></i>
+                        <span>+Add receipt</span>
+                    </div> */}
+                    {/* <div className="card col-sm">
+                        <i className="bi bi-files"></i>
+                        <span>+Create report</span>
+                    </div> */}
                     <div className="card col-sm" onClick={navToTrip}>
                         <i className="bi bi-airplane"></i>
                         <span>+Create trip</span>

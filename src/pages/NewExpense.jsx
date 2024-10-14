@@ -19,7 +19,7 @@ export default function NewExpense() {
     const [invoiceFile, setInvoiceFile] = useState(null);
     const [invoiceUrl, setInvoiceUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [showModal, setShowModal] = useState(false); 
+    const [showModal, setShowModal] = useState(false);
     const [team, setTeam] = useState('')
     const [userEmail, setUserEmail] = useState(null);
 
@@ -96,11 +96,11 @@ export default function NewExpense() {
 
     return (
         <div className="container" style={{ display: "flex" }}>
-            
+
             <div className="container">
 
 
-                
+
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <button type="button" className="btn-close" aria-label="Close" onClick={() => navigate('/expense')}></button>
                 </div>
@@ -118,7 +118,7 @@ export default function NewExpense() {
                             { label: "Category*", value: category, setter: setCategory, select: true, options: ["Select Type", "Trip", "Services", "Catering"] },
                             { label: "Description", value: description, setter: setDescription },
                             { label: "Employee Name*", value: employee, setter: setEmployee },
-                            { label: "Team*", value: team, setter: setTeam, select: true, options:["Select team", "Project management", "Software development", "Design team"] },
+                            { label: "Team*", value: team, setter: setTeam, select: true, options: ["Select team", "Project management", "Software development", "Design team"] },
 
                         ].map(({ label, value, setter, type, select, options }, index) => (
                             <div className="mb-3 row" key={index}>
@@ -145,49 +145,64 @@ export default function NewExpense() {
                         ))}
                     </div>
 
-                    <label style={{ border: "1px solid black", display: "flex", justifyContent: "center", alignItems: "center" }} htmlFor="file-upload">
-                        <input 
-                        type="file" 
-                        id="file-upload" 
-                        style={{ display: 'none' }} 
-                        onChange={handleFileChange} />
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-                            <i className="bi bi-plus"></i>
-                            <p>Upload an invoice</p>
+                    <label
+                        htmlFor="file-upload"
+                        style={{
+                            border: "2px dashed #ccc",
+                            borderRadius: "8px",
+                            padding: "20px",
+                            cursor: "pointer",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            textAlign: "center",
+                            transition: "all 0.3s ease",
+                            backgroundColor: "#f9f9f9",
+                            height: "150px",
+                            gap: "10px",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#007bff")}
+                        onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#ccc")}
+                    >
+                        <input
+                            type="file"
+                            id="file-upload"
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                color: "#666"
+                            }}
+                        >
+                            <i className="bi bi-plus" style={{ fontSize: "24px", marginBottom: "5px" }}></i>
+                            <p style={{ margin: 0, fontSize: "16px", fontWeight: "500" }}>Upload an Invoice</p>
                         </div>
                     </label>
+
                 </div>
                 <div class="modal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-                {invoiceUrl && (
-                    <div style={{ marginTop: '20px' }}>
-                        <h5>Uploaded Invoice:</h5>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <img src={invoiceUrl} alt="Uploaded Invoice" style={{ maxWidth: '100%', border: '1px solid black', marginRight: '10px' }} />
-                            <button onClick={() => setShowModal(true)} className="btn btn-link">
-                                <i className="bi bi-eye"></i>
-                            </button>
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Modal title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Modal body text goes here.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
                         </div>
                     </div>
-                )}
+                </div>
 
-                <button onClick={handleSubmit} className="btn btn-primary" style={{marginTop: "10px"}}>Save</button>
+                <button onClick={handleSubmit} className="btn btn-primary" style={{ marginTop: "10px" }}>Save</button>
 
                 {/* Modal for image preview */}
                 {showModal && (
