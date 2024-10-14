@@ -7,9 +7,9 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function BarChar (){
 
-    const [cateringExpeneses, setCateringExpenses] = useState(null);
-    const [serviceExpenses, setServiceExpenses] = useState(null);
-    const [tripExpenses, setTripExpenses]  = useState(null);
+    const [cateringExpeneses, setCateringExpenses] = useState(0);
+    const [serviceExpenses, setServiceExpenses] = useState(0);
+    const [tripExpenses, setTripExpenses]  = useState(0);
 
     useEffect(()=>{
         const getData = async() =>{
@@ -17,18 +17,28 @@ export default function BarChar (){
             const data = await response.json();
 
             const catering = data.filter((obj)=> obj.category === "Catering");
-
-            const cateringExpenses = catering.reduce((acc, item)=> acc + parseFloat(item.amount), 0);
+            console.log(catering);
+            const approvedCatering = catering.filter((obj)=> obj.status === "approved");
+            const cateringExpenses = approvedCatering.reduce((acc, item)=> acc + parseFloat(item.amount), 0);
             setCateringExpenses(cateringExpenses)
 
-            const service = data.filter((obj)=> obj.category === "Services");
 
-            const serviceExpenses = service.reduce((acc, item)=> acc + parseFloat(item.amount), 0);
+
+            // Service
+            const service = data.filter((obj)=> obj.category === "Services");
+            console.log(service);
+            const approvedService = service.filter((obj)=> obj.status === "approved");
+            console.log(approvedService);
+            const serviceExpenses = approvedService.reduce((acc, item)=> acc + parseFloat(item.amount), 0);
             setServiceExpenses(serviceExpenses)
 
             
+            // Trip
             const trip = data.filter((obj)=>obj.category === "Trip");
-            const tripExpenses = trip.reduce((acc, item)=> acc + parseFloat(item.amount), 0);
+            console.log(trip);
+            const approvedTrip = trip.filter((obj)=> obj.status === "approved");
+            console.log(approvedTrip);
+            const tripExpenses = approvedTrip.reduce((acc, item)=> acc + parseFloat(item.amount), 0);
             setTripExpenses(tripExpenses)
         }
         getData();

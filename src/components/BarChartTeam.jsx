@@ -8,47 +8,48 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function BarChartTeam() {
 
-    const [spendingData, setSpendingData] = useState(null);
+    const [spendingData, setSpendingData] = useState([]);
     console.log(spendingData)
 
-    const [totalProjManAmount, setTotalProjManAmount] = useState(null);
+    const [totalProjManAmount, setTotalProjManAmount] = useState(0);
     console.log(totalProjManAmount);
 
 
-    const [totalDesignTeamAmount, setTotalDesignTeamAmount] = useState(null);
+    const [totalDesignTeamAmount, setTotalDesignTeamAmount] = useState(0);
     console.log(totalDesignTeamAmount)
 
-    
-    const [softDevExpense, setSoftDevExpense] = useState(null);
+
+    const [softDevExpense, setSoftDevExpense] = useState(0);
     console.log(softDevExpense)
-"Project management"
-    useEffect(()=>{
+ 
+    
+    useEffect(() => {
         const getData = async () => {
             const response = await fetch('https://backend-2txi.vercel.app/expenses');
             const data = await response.json();
             setSpendingData(data);
 
-            const projMan = data.filter((obj)=> obj.team === "Project management");
+            const projMan = data.filter((obj) => obj.team === "Project management");
             console.log(projMan);
-            
-            const projManExpense = projMan.reduce((acc, item)=> acc + parseFloat(item.amount), 0);
+
+            const projManExpense = projMan.reduce((acc, item) => acc + parseFloat(item.amount), 0);
             console.log(projManExpense);
 
             setTotalProjManAmount(projManExpense);
 
-            const designTeamName = data.filter((obj)=> obj.team === "Design team");    
+            const designTeamName = data.filter((obj) => obj.team === "Design team");
             console.log(designTeamName);
-            const designExpense = designTeamName.reduce((acc, item)=> acc + parseFloat(item.amount), 0);
+            const designExpense = designTeamName.reduce((acc, item) => acc + parseFloat(item.amount), 0);
             setTotalDesignTeamAmount(designExpense)
 
-            const softDevTeamName = data.filter((obj)=> obj.team === "Software development");
-            const softDevExpense = softDevTeamName.reduce((acc, item)=> acc + parseFloat(item.amount), 0);
+            const softDevTeamName = data.filter((obj) => obj.team === "Software development");
+            const softDevExpense = softDevTeamName.reduce((acc, item) => acc + parseFloat(item.amount), 0);
             console.log(softDevExpense);
             setSoftDevExpense(softDevExpense)
         }
         getData();
     }, [])
-    
+
 
 
     const data = {
@@ -66,34 +67,28 @@ export default function BarChartTeam() {
         responsive: true,
         plugins: {
             legend: {
-                display: true, //Hide the legend as it's not in the reference image
+                display: true,
             },
 
             title: {
                 display: true,
                 text: 'Team Spending Trend',
-                color: 'White',
-                font: {
-                    size: 10, //Adjust font size as needed
-                },
+                color: 'Black',
             },
         },
 
         scales: {
             x: {
                 ticks: {
-                    color: 'Black', // Color for x-axis labels
+                    color: 'Black',
                 },
             },
 
             y: {
-                beginAtZero: true,// Ensure Y-axis start at 0
+                beginAtZero: true,
                 ticks: {
-                    color: 'Black',// Color for the Y-axis labels
-                    stepSize: 1000 // Steps for Y-axis
+                    color: 'Black',
                 },
-                min: 0,
-                max: 1000, //Set the maximum value to match the chart's 100k scale
             },
         },
     };

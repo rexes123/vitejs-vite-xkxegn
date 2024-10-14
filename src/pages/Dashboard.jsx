@@ -16,18 +16,20 @@ export default function Dashboard() {
     };
 
     const [pendingStatus, setPendingStatus] = useState(0);
+    console.log(pendingStatus);
     const [data, setData] = useState([]);
     const [expenses, setExpenses] = useState([]); // Store actual expenses
+    console.log(expenses);
+    const [approvedExpenses, setApprovedExpenses] = useState([]);
+    console.log(approvedExpenses);
 
-    // for (let i = 0; i < expenses.length; i++){
-    //     console.log(expenses[i].team === "Software development");
-    // }
 
     const softDevExpense = expenses.filter(expense => expense.team === "Software development");
     console.log(softDevExpense.length);
 
     // console.log(expenses.create_timestamp);
     const [trips, setTrips] = useState(0);
+    console.log(trips);
 
     useEffect(() => {
         const getData = async () => {
@@ -38,16 +40,26 @@ export default function Dashboard() {
                 ]);
 
                 const expensesData = await expensesResponse.json();
-                setExpenses(expensesData); // Set expenses to the actual data
+                console.log(expensesData);
+                const approvedExpense = expensesData.filter(expense => expense.status === 'approved');
+                setApprovedExpenses(approvedExpense)
+                const pendingExpense = expensesData.filter(expense => expense.status === 'pending');
+                setExpenses(pendingExpense);                 
+
+                // console.log(pendingExpense);
+
+
                 const tripsData = await tripsResponse.json();
-                setTrips(tripsData.length);
+                const pendingTrips = tripsData.filter(trip => trip.status === 'pending');
+                console.log(pendingTrips.length);
+                setTrips(pendingTrips.length);
 
                 // Combine data for pending tasks
                 const combinedData = [...expensesData, ...tripsData];
                 setData(combinedData);
 
                 // Calculate pending status
-                const pending = expensesData.filter(item => item.status === 'pending').length;
+                const pending = combinedData.filter(item => item.status === 'pending').length;
                 setPendingStatus(pending);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -73,37 +85,22 @@ export default function Dashboard() {
                     <div className="pending-row">
                         <i className="bi bi-airplane"></i>
                         <div className="pending-info">
-                            <span>Trips Registered</span>
+                            <span>Pending Trips Registered</span>
                             <span>{trips}</span>
-                        </div>
-                    </div>
-
-                    <div className="pending-row">
-                        <i className="bi bi-cash-stack"></i>
-                        <div className="pending-info">
-                            <span>Unreported Expenses</span>
-                            <span>1</span>
                         </div>
                     </div>
 
                     <div className="pending-row">
                         <i className="bi bi-cart-plus"></i>
                         <div className="pending-info">
-                            <span>Upcoming Expenses</span>
-                            <span>{expenses.length}</span> {/* Display the number of expenses */}
+                            <span>Pending Expenses</span>
+                            <span>{expenses.length}</span>
                         </div>
                     </div>
 
-                    <div className="pending-row">
-                        <i className="bi bi-currency-dollar"></i>
-                        <div className="pending-info">
-                            <span>Unreported Advances</span>
-                            <span>1</span>
-                        </div>
-                    </div>
                 </div>
                 <div className="card col-sm-7">
-                    <p>Recent Expense</p>
+                    <p>Recent Expenses Approved</p>
                     <hr />
                     <table className="table">
                         <thead>
@@ -115,15 +112,15 @@ export default function Dashboard() {
                             </tr>
                         </thead>
                         <tbody>
-                            {expenses
+                            {approvedExpenses
                                 .sort((a, b) => new Date(b.create_timestamp) - new Date(a.create_timestamp))
                                 .slice(0, 3)
                                 .map((expense, index) => (
                                     <tr key={index}>
                                         <th scope="row">{index + 1}</th>
-                                        <td>{expense.employee}</td> {/* Adjust this field */}
-                                        <td>{expense.team}</td> {/* Adjust this field */}
-                                        <td>{expense.amount}</td> {/* Adjust this field */}
+                                        <td>{expense.employee}</td> 
+                                        <td>{expense.team}</td> 
+                                        <td>{expense.amount}</td> 
                                     </tr>
                                 ))}
                         </tbody>
@@ -140,14 +137,6 @@ export default function Dashboard() {
                         +New expense
                     </div>
 
-                    {/* <div className="card col-sm">
-                        <i className="bi bi-receipt"></i>
-                        <span>+Add receipt</span>
-                    </div> */}
-                    {/* <div className="card col-sm">
-                        <i className="bi bi-files"></i>
-                        <span>+Create report</span>
-                    </div> */}
                     <div className="card col-sm" onClick={navToTrip}>
                         <i className="bi bi-airplane"></i>
                         <span>+Create trip</span>

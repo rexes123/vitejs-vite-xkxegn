@@ -189,15 +189,6 @@ export default function Settings() {
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
-              <div className="mb-3" style={{ width: "48%"}}>
-                <label>Email</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
               </div>
       
               <div className="mb-3" style={{ width: "48%"}}>
@@ -208,11 +199,6 @@ export default function Settings() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />
-              </div>
-
-              <div className="mb-3">
-                <label>Bio</label>
-                <textarea className="form-control" name="" id="" cols="30" rows="10"></textarea>
               </div>
             </form>
           </div>
