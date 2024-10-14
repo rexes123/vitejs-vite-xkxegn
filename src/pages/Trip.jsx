@@ -134,7 +134,7 @@ export default function Trip() {
                                 <td>{formatDate(trips.destination)}</td>
                                 <td>{trips.purpose}</td>
                                 <td>{trips.amount}</td>
-                                <td>{trips.create_at}</td>
+                                <td>{formatDate(trips.create_at)}</td>
                                 <td>{trips.status}</td>
                             </tr>
                         ))}

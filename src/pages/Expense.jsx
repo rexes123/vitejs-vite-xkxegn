@@ -82,6 +82,18 @@ export default function Expense() {
         setSelectedExpenses(new Set()); // Clear selected expenses
     };
 
+    const formatDate = (dateString)=>{
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute:'2-digit',
+            hour12: true
+        })
+    }
+
     return (
         <div className="container" style={{ display: "flex" }}>
             <div style={{ width: "100%" }}>
@@ -123,7 +135,7 @@ export default function Expense() {
                                     </th>
                                     <td>{expense.subject}</td>
                                     <td>{expense.merchant}</td>
-                                    <td>{expense.date}</td>
+                                    <td>{formatDate(expense.date)}</td>
                                     <td>{expense.amount}</td>
                                     <td>{expense.status}</td>
                                 </tr>
