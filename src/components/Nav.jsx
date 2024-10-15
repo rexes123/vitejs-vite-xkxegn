@@ -198,7 +198,7 @@ export default function Nav() {
         ) : (
           <p>No user data available</p>
         )}
-        <div style={{ position: "relative", display: "flex", flexDirection: "column" }}>
+        <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "16px" }}>
           <NavLink  to="/" role="tab"><i class="bi bi-house navBar__icon"></i> Home</NavLink>
           <NavLink to="/expense" activeClassName="active" role="tab">
             <i className="bi bi-cart-plus navBar__icon" />Expenses

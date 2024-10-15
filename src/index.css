@@ -27,7 +27,7 @@
   }
 
 
-input {
+input.form-control, textarea.form-control, select.form-select {
   padding: 1rem 1.2rem;
   /* margin: 1rem; */
   border-radius: 2rem;

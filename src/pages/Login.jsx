@@ -66,6 +66,7 @@ export default function Login() {
 
     return (
         <div className='container'>
+            <h3>Login</h3>
             <Form>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Email address</Form.Label>
