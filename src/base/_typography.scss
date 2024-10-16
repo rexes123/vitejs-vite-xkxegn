@@ -13,15 +13,10 @@ label{
 }
 
 
-a[role="tab"] {
-    margin: 0 8px;
-    text-decoration: none;
-    font-size: 18px;
-    color: #31344b;
-    font-weight: 400;
-    display: inline-flex;
-    padding: 10px 12px;
-    box-shadow: -3px -3px 7px #ffffff, 3px 3px 5px #ceced1;
-    position: relative;
-    transition: all 0.3s ease;
+a {
+    margin-right: auto;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(0,0,0,.3);
+    text-shadow: 2px 2px 4px rgba(0,0,0,.3), -2px -2px 4px rgba(255,255,255,1);
   }

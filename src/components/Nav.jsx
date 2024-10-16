@@ -207,7 +207,7 @@ export default function Nav() {
           <NavLink to="/approvals" role="tab"><i class="bi bi-clipboard-check navBar__icon" />Approvals</NavLink>
           <NavLink to="/settings" role="tab" class="nav-link"><i class="bi bi-gear navBar__icon"></i>Settings</NavLink>
         </div>
-        <a onClick={handleLogout} style={{ position: 'absolute', bottom: 0, textDecoration: 'none' }}>
+        <a onClick={handleLogout} class="logout" style={{ position: 'absolute', bottom: 0, textDecoration: 'none' }}>
           <i class="bi bi-door-closed navBar__icon"></i>Log out
         </a>
       </div>
