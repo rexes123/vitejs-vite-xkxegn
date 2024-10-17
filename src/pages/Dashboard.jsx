@@ -72,36 +72,36 @@ export default function Dashboard() {
         <div className="container">
             <div className="row tasksAndExpense">
                 <div className="card col-sm-5">
-                            <h5>Pending Tasks</h5>
-                            <hr />
-                            <div className="pending-row">
-                                <i className="bi bi-clock"></i>
-                                <div className="pending-info">
-                                    <span>Pending Approvals</span>
-                                    <span>{pendingStatus}</span>
-                                </div>
-                            </div>
+                    <h5>Pending Tasks</h5>
+                    <hr />
+                    <div className="pending-row">
+                        <i className="bi bi-clock"></i>
+                        <div className="pending-info">
+                            <span>Pending Approvals</span>
+                            <span>{pendingStatus}</span>
+                        </div>
+                    </div>
 
-                            <div className="pending-row">
-                                <i className="bi bi-airplane"></i>
-                                <div className="pending-info">
-                                    <span>Pending Trips Registered</span>
-                                    <span>{trips}</span>
-                                </div>
-                            </div>
+                    <div className="pending-row">
+                        <i className="bi bi-airplane"></i>
+                        <div className="pending-info">
+                            <span>Pending Trips Registered</span>
+                            <span>{trips}</span>
+                        </div>
+                    </div>
 
-                            <div className="pending-row">
-                                <i className="bi bi-cart-plus"></i>
-                                <div className="pending-info">
-                                    <span>Pending Expenses</span>
-                                    <span>{expenses.length}</span>
-                                </div>
-                            </div>
+                    <div className="pending-row">
+                        <i className="bi bi-cart-plus"></i>
+                        <div className="pending-info">
+                            <span>Pending Expenses</span>
+                            <span>{expenses.length}</span>
+                        </div>
+                    </div>
                 </div>
                 <div className="card col-sm-7">
                     <h5>Recent Expenses Approved</h5>
                     <hr />
-                    <table class="table-light">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th scope="col">Subject</th>
@@ -117,7 +117,7 @@ export default function Dashboard() {
                                 .map((expense, index) => (
                                     <tr key={index}>
                                         <th scope="row">{index + 1}</th>
-                                        <td>{expense.employee}</td>
+                                        <td >{expense.employee}</td>
                                         <td>{expense.team}</td>
                                         <td>{expense.amount}</td>
                                     </tr>
@@ -131,14 +131,18 @@ export default function Dashboard() {
                 <h5>Quick Access</h5>
                 <hr />
                 <div className="row" style={{ padding: "calc(var(--bs-gutter-x)* .5)", margin: "0px" }}>
-                    <div className="card col-sm" onClick={navToExpense}>
-                        <i className="bi bi-wallet2"></i>
-                        +New expense
+                    <div className="card col-sm" onClick={navToExpense} style={{ display: "flex", justifyContent: "center" }}>
+                        <div>
+                            <i className="bi bi-wallet2"></i>
+                            +New expense
+                        </div>
                     </div>
 
                     <div className="card col-sm" onClick={navToTrip}>
-                        <i className="bi bi-airplane"></i>
-                        <span>+Create trip</span>
+                        <div style={{ display: "flex" }}>
+                            <i className="bi bi-airplane"></i>
+                            <span>+Create trip</span>
+                        </div>
                     </div>
                 </div>
             </div>

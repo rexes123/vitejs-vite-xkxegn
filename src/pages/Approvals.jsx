@@ -147,7 +147,7 @@ export default function Approvals() {
                     <button onClick={handleDeleteSelected} type="button" className="btn btn-danger">Delete Selected</button>
                 )}
 
-                <table className="table">
+                <table>
                     <thead>
                         <tr>
                             {

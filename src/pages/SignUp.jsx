@@ -76,6 +76,7 @@ export default function SignUp() {
 
     return (
         <div className='container'>
+            <h3>Sign Up</h3>
             <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Name</Form.Label>
