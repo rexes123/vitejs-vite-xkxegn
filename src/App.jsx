@@ -10,6 +10,7 @@ import { AuthProvider } from './components/AuthProvider';
 import Approvals from './pages/Approvals';
 import Settings from './pages/Settings';
 import Layout from './components/Layout';
+import RequireAuth from './components/RequireAuth';
 
 export default function App() {
 
@@ -18,7 +19,12 @@ export default function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<Layout/>}>
+            <Route path='/' element={
+              <RequireAuth>
+              <Layout/>
+              </RequireAuth>
+              }>
+                
               <Route index element={<Dashboard />} />
               <Route path='/newExpense' element={<NewExpense />} />
               <Route path='/expense' element={<Expense />} />
