@@ -26,7 +26,6 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             {/* Protected Routes */}
-
             <Route path='/' element={<ProtectedRoute/>}>
               <Route path='/' element={<Layout />}>
                 <Route index element={<Dashboard />} />

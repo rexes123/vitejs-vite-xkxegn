@@ -179,7 +179,7 @@ export default function NewExpense() {
                             }}
                         >
                             <i className="bi bi-plus" style={{ fontSize: "24px", marginBottom: "5px" }}></i>
-                            <p style={{ margin: 0, fontSize: "16px", fontWeight: "500" }}>Upload an Invoice</p>
+                            <p style={{ margin: 0, fontSize: "16px", fontWeight: "500" }}>Upload a receipt</p>
                         </div>
                     </label>
 

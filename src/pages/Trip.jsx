@@ -101,7 +101,7 @@ export default function Trip() {
                     <button onClick={handleDeleteSelected} type="button" class="btn btn-danger">Delete Selected</button>
                 )}
 
-                <table>
+                <table className="table">
                     <thead>
                         <tr>
                             <th scope="col">

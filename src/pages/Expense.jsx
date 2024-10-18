@@ -104,7 +104,7 @@ export default function Expense() {
                     <button onClick={handleDeleteSelected} type="button" class="btn btn-danger">Delete Selected</button>
                 )}
 
-                <table>
+                <table class="table">
                     <thead>
                         <tr>
                             <th scope="col">
